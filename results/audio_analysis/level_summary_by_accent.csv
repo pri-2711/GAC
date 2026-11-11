@@ -1,0 +1,7 @@
+,peak_dbfs,peak_dbfs,peak_dbfs,speech_rms_dbfs,speech_rms_dbfs,speech_rms_dbfs,noise_floor_dbfs,noise_floor_dbfs,noise_floor_dbfs,approx_snr_db,approx_snr_db,approx_snr_db
+,min,mean,max,min,mean,max,min,mean,max,min,mean,max
+accent,,,,,,,,,,,,
+Ahmedabad,-5.9,-4.3,-2.2,-21.6,-20.7,-19.4,-47.4,-45.8,-45.0,21.7,23.2,24.8
+Kutchi,-9.0,-4.9,-2.0,-25.5,-21.8,-19.6,-50.8,-49.2,-46.1,20.1,24.2,29.6
+Mehsani,-2.5,-0.4,0.0,-18.3,-17.0,-15.4,-93.1,-82.5,-66.9,47.3,63.3,72.9
+Kathiyawadi,-1.9,-0.3,0.0,-19.7,-18.6,-17.1,-94.0,-79.7,-68.9,48.3,59.1,74.0

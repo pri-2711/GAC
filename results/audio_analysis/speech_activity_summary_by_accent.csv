@@ -1,0 +1,5 @@
+accent,leading_silence_s,trailing_silence_s,n_internal_pauses,internal_pause_total_s,longest_pause_s,speech_ratio,low_energy_frame_pct,quiet_frame_pct,silence_frame_pct
+Ahmedabad,0.22,0.32,4.43,2.06,0.57,0.77,23.18,19.63,0.22
+Kutchi,0.53,1.24,2.86,1.87,1.09,0.73,26.54,24.95,0.2
+Mehsani,0.68,0.08,5.71,2.77,0.74,0.73,27.4,6.14,20.99
+Kathiyawadi,0.75,1.47,3.14,1.69,0.84,0.61,38.76,8.2,30.29
