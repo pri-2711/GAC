@@ -1,0 +1,45 @@
+Phase 3 – MFCC extraction and validation summary
+==================================================
+
+Extraction parameters:
+  sample_rate : 16000
+  n_mfcc      : 13
+  n_fft       : 512
+  hop_length  : 160
+  win_length  : 400
+  window      : hann
+  dct_type    : 2
+  norm        : ortho
+  n_mels      : 128
+  center      : True
+  delta_width : 9
+
+Recordings in metadata : 28
+Recordings processed   : 28
+Extraction errors      : 0
+
+Recordings per accent:
+  Ahmedabad   : 7
+  Kutchi      : 7
+  Mehsani     : 7
+  Kathiyawadi : 7
+  Surti       : 0  (pending future collection)
+
+Frames per recording   : min 960, max 1826, total 38127
+Features per recording : 13 coefficients x (MFCC, delta, delta-delta) x (mean, std) = 78
+Recordings with Phase 2 quality flags kept: 11
+
+Validation checks:
+  [PASS] No extraction errors
+  [PASS] All metadata recordings processed  -> metadata=28, processed=28
+  [PASS] Feature table has one row per recording, IDs match metadata
+  [PASS] Every recording has 13 coefficients; MFCC/delta/delta-delta shapes agree with frame count
+  [PASS] No NaN or infinite values in any frame-level matrix
+  [PASS] No NaN or infinite values in recording-level features
+  [PASS] Feature table has 78 acoustic columns (13 x 2 stats x 3 groups)
+  [PASS] A frame-level NPZ exists for each recording and stores its recording ID
+  [PASS] Extraction parameters identical across all recordings (stored in each NPZ)
+  [PASS] Phase 2 quality flags available for every recording
+  [PASS] Flagged recordings were kept (none removed)  -> 11 flagged recordings retained
+
+OVERALL: ALL CHECKS PASSED
