@@ -1,0 +1,29 @@
+recording_id,speaker_id,accent,region,recording_type,original_file_path,processed_file_path,original_format,duration_seconds,sample_rate,channels,audio_subtype,conversion_status
+AHM_S01_R01,AHM_S01,Ahmedabad,Central Gujarat,,dataset/central-Gujarat/ahmedabad/Ahmedabad-01-GAC.m4a,dataset/processed/wav/Ahmedabad/Ahmedabad-01-GAC.wav,M4A,14.187,16000,1,PCM_16,success
+AHM_S01_R02,AHM_S01,Ahmedabad,Central Gujarat,,dataset/central-Gujarat/ahmedabad/Ahmedabad-02-GAC.m4a,dataset/processed/wav/Ahmedabad/Ahmedabad-02-GAC.wav,M4A,11.968,16000,1,PCM_16,success
+AHM_S01_R03,AHM_S01,Ahmedabad,Central Gujarat,,dataset/central-Gujarat/ahmedabad/Ahmedabad-03-GAC.m4a,dataset/processed/wav/Ahmedabad/Ahmedabad-03-GAC.wav,M4A,11.989,16000,1,PCM_16,success
+AHM_S01_R04,AHM_S01,Ahmedabad,Central Gujarat,,dataset/central-Gujarat/ahmedabad/Ahmedabad-04-GAC.m4a,dataset/processed/wav/Ahmedabad/Ahmedabad-04-GAC.wav,M4A,12.16,16000,1,PCM_16,success
+AHM_S01_R05,AHM_S01,Ahmedabad,Central Gujarat,,dataset/central-Gujarat/ahmedabad/Ahmedabad-05-GAC.m4a,dataset/processed/wav/Ahmedabad/Ahmedabad-05-GAC.wav,M4A,17.259,16000,1,PCM_16,success
+AHM_S01_R06,AHM_S01,Ahmedabad,Central Gujarat,,dataset/central-Gujarat/ahmedabad/Ahmedabad-06-GAC.m4a,dataset/processed/wav/Ahmedabad/Ahmedabad-06-GAC.wav,M4A,12.117,16000,1,PCM_16,success
+AHM_S01_R07,AHM_S01,Ahmedabad,Central Gujarat,,dataset/central-Gujarat/ahmedabad/Ahmedabad-07-GAC.m4a,dataset/processed/wav/Ahmedabad/Ahmedabad-07-GAC.wav,M4A,16.448,16000,1,PCM_16,success
+KUT_S01_R01,KUT_S01,Kutchi,Kutch,,dataset/kutch/Kutchi-01 -GAC.m4a,dataset/processed/wav/Kutchi/Kutchi-01_-GAC.wav,M4A,15.147,16000,1,PCM_16,success
+KUT_S01_R02,KUT_S01,Kutchi,Kutch,,dataset/kutch/Kutchi-02-GAC.m4a,dataset/processed/wav/Kutchi/Kutchi-02-GAC.wav,M4A,16.96,16000,1,PCM_16,success
+KUT_S01_R03,KUT_S01,Kutchi,Kutch,,dataset/kutch/Kutchi-03-GAC.m4a,dataset/processed/wav/Kutchi/Kutchi-03-GAC.wav,M4A,15.403,16000,1,PCM_16,success
+KUT_S01_R04,KUT_S01,Kutchi,Kutch,,dataset/kutch/Kutchi-04-GAC.m4a,dataset/processed/wav/Kutchi/Kutchi-04-GAC.wav,M4A,13.76,16000,1,PCM_16,success
+KUT_S01_R05,KUT_S01,Kutchi,Kutch,,dataset/kutch/Kutchi-05-GAC.m4a,dataset/processed/wav/Kutchi/Kutchi-05-GAC.wav,M4A,14.336,16000,1,PCM_16,success
+KUT_S01_R06,KUT_S01,Kutchi,Kutch,,dataset/kutch/Kutchi-06-GAC.m4a,dataset/processed/wav/Kutchi/Kutchi-06-GAC.wav,M4A,14.741,16000,1,PCM_16,success
+KUT_S01_R07,KUT_S01,Kutchi,Kutch,,dataset/kutch/Kutchi-07-GAC.m4a,dataset/processed/wav/Kutchi/Kutchi-07-GAC.wav,M4A,15.189,16000,1,PCM_16,success
+MEH_S01_R01,MEH_S01,Mehsani,North Gujarat,,dataset/north-Gujarat/mehsani/mehsani-01-GAC.ogg,dataset/processed/wav/Mehsani/mehsani-01-GAC.wav,OGG,18.253,16000,1,PCM_16,success
+MEH_S01_R02,MEH_S01,Mehsani,North Gujarat,,dataset/north-Gujarat/mehsani/mehsani-02-GAC.ogg,dataset/processed/wav/Mehsani/mehsani-02-GAC.wav,OGG,10.813,16000,1,PCM_16,success
+MEH_S01_R03,MEH_S01,Mehsani,North Gujarat,,dataset/north-Gujarat/mehsani/mehsani-03-GAC.ogg,dataset/processed/wav/Mehsani/mehsani-03-GAC.wav,OGG,14.914,16000,1,PCM_16,success
+MEH_S01_R04,MEH_S01,Mehsani,North Gujarat,,dataset/north-Gujarat/mehsani/mehsani-04-GAC.ogg,dataset/processed/wav/Mehsani/mehsani-04-GAC.wav,OGG,11.293,16000,1,PCM_16,success
+MEH_S01_R05,MEH_S01,Mehsani,North Gujarat,,dataset/north-Gujarat/mehsani/mehsani-05-GAC.ogg,dataset/processed/wav/Mehsani/mehsani-05-GAC.wav,OGG,14.254,16000,1,PCM_16,success
+MEH_S01_R06,MEH_S01,Mehsani,North Gujarat,,dataset/north-Gujarat/mehsani/mehsani-06-GAC.ogg,dataset/processed/wav/Mehsani/mehsani-06-GAC.wav,OGG,12.633,16000,1,PCM_16,success
+MEH_S01_R07,MEH_S01,Mehsani,North Gujarat,,dataset/north-Gujarat/mehsani/mehsani-07-GAC.ogg,dataset/processed/wav/Mehsani/mehsani-07-GAC.wav,OGG,17.273,16000,1,PCM_16,success
+KAT_S01_R03,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/karhiyawadi-03-GAC.ogg,dataset/processed/wav/Kathiyawadi/karhiyawadi-03-GAC.wav,OGG,9.873,16000,1,PCM_16,success
+KAT_S01_R01,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathiyawadi-01-GAC.ogg,dataset/processed/wav/Kathiyawadi/kathiyawadi-01-GAC.wav,OGG,10.614,16000,1,PCM_16,success
+KAT_S01_R02,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathiyawadi-02-GAC.ogg,dataset/processed/wav/Kathiyawadi/kathiyawadi-02-GAC.wav,OGG,9.594,16000,1,PCM_16,success
+KAT_S01_R04,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathiyawadi-04-GAC.ogg,dataset/processed/wav/Kathiyawadi/kathiyawadi-04-GAC.wav,OGG,11.754,16000,1,PCM_16,success
+KAT_S01_R05,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathiyawadi-05-GAC.ogg,dataset/processed/wav/Kathiyawadi/kathiyawadi-05-GAC.wav,OGG,12.114,16000,1,PCM_16,success
+KAT_S01_R06,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathiyawadi-06-GAC.ogg,dataset/processed/wav/Kathiyawadi/kathiyawadi-06-GAC.wav,OGG,10.873,16000,1,PCM_16,success
+KAT_S01_R07,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathiyawadi-07-GAC.ogg,dataset/processed/wav/Kathiyawadi/kathiyawadi-07-GAC.wav,OGG,15.194,16000,1,PCM_16,success

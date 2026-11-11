@@ -1,0 +1,15 @@
+=== Phase 1 validation report ===
+Total files discovered      : 28
+Successfully converted      : 28
+Failed conversions          : 0 
+Validation failures         : 0 
+Files in unmapped folders   : 0 
+
+Valid recordings per accent:
+  Ahmedabad   : 7
+  Kutchi      : 7
+  Mehsani     : 7
+  Kathiyawadi : 7
+  Surti       : 0 (pending future collection)
+
+Total validated: 28
