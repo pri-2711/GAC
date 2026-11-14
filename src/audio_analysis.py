@@ -12,7 +12,7 @@ import pandas as pd
 
 import config as cfg
 
-RESULTS_DIR = cfg.PROJECT_ROOT / "results" / "audio_analysis"
+RESULTS_DIR = cfg.AUDIO_ANALYSIS_DIR
 
 # Framing for energy analysis (25 ms window, 10 ms hop at 16 kHz)
 FRAME_LENGTH = 400
@@ -144,7 +144,7 @@ def representative_recordings(meta: pd.DataFrame) -> pd.DataFrame:
     """Per accent: the recording whose duration is closest to that accent's median
     (deterministic, avoids cherry-picking)."""
     picks = []
-    for accent in [a.accent for a in cfg.ACCENTS]:
+    for accent in cfg.ordered_accents(meta["accent"]):
         sub = meta[meta["accent"] == accent]
         if sub.empty:
             continue

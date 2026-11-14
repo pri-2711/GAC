@@ -469,6 +469,6 @@ All files below are in `results/mfcc/`.
 | `mfcc_feature_columns.json` | Lists which columns are metadata (not for model input) and which are acoustic features, plus the parameters. |
 | `mfcc_accent_summary.csv` | Per accent, feature group and coefficient: mean and spread of recording means, min/max, pooled frame statistics. |
 | `extraction_validation_summary.txt` | Parameters, counts per accent and all validation checks. |
-| `figures/` | All figures used above (14 summary figures) and `figures/per_recording/` with 28 per-recording MFCC heatmaps. |
+| `figures/` | All figures used above (13 summary figures) and `figures/per_recording/` with 28 per-recording MFCC heatmaps. |
 
 To rebuild everything: run `notebooks/03_mfcc_extraction.ipynb` from top to bottom. The code is in `src/mfcc_features.py`.

@@ -17,12 +17,13 @@ import numpy as np
 import pandas as pd
 
 import audio_analysis as aa
+import common
 import config as cfg
 
-MFCC_DIR = cfg.PROJECT_ROOT / "results" / "mfcc"
+MFCC_DIR = cfg.MFCC_DIR
 FRAME_DIR = MFCC_DIR / "frame_features"
 FIG_DIR = MFCC_DIR / "figures"
-PHASE2_METRICS_CSV = aa.RESULTS_DIR / "audio_quality_metrics.csv"
+PHASE2_METRICS_CSV = cfg.PHASE2_METRICS_CSV
 
 # ---- Extraction parameters (single source of truth; saved inside every NPZ) ----
 PARAMS = dict(
@@ -103,9 +104,8 @@ def load_metadata_with_flags() -> tuple[pd.DataFrame, list[str]]:
     Returns (metadata, ids_without_phase2_flags). A recording added after Phase 2 was
     run (e.g. future Surti files) is kept, with empty flags, and reported.
     """
-    meta = pd.read_csv(cfg.METADATA_CSV)
-    meta = meta[meta["conversion_status"].str.startswith("success")].reset_index(drop=True)
-    p2 = pd.read_csv(PHASE2_METRICS_CSV, keep_default_na=False)
+    meta = common.load_metadata()
+    p2 = common.load_quality_metrics(keep_empty_strings=True)
     keep = ["recording_id"] + FLAG_COLUMNS + ["speech_rms_dbfs", "noise_floor_dbfs", "peak_dbfs"]
     merged = meta.merge(p2[keep], on="recording_id", how="left")
     missing = merged.loc[merged["quality_flags"].isna(), "recording_id"].tolist()
@@ -157,7 +157,7 @@ def accent_summary(df: pd.DataFrame, store: dict) -> pd.DataFrame:
     pooled_frame_* use every frame of the accent (longer recordings count more).
     """
     rows = []
-    for accent in [a.accent for a in cfg.ACCENTS]:
+    for accent in cfg.ordered_accents(df["accent"]):
         sub = df[df["accent"] == accent]
         if sub.empty:
             continue
@@ -179,15 +179,15 @@ def accent_summary(df: pd.DataFrame, store: dict) -> pd.DataFrame:
 def validate(meta: pd.DataFrame, df: pd.DataFrame, store: dict, errors: list,
              missing_flags: list) -> tuple[list[tuple[str, bool, str]], bool]:
     """Run all Phase 3 checks. Returns (list of (check, passed, detail), all_passed)."""
-    checks = []
-    add = lambda name, ok, detail="": checks.append((name, bool(ok), detail))
+    checks = common.CheckList()
+    add = checks.add
 
     add("No extraction errors", not errors, f"{len(errors)} error(s): {errors}" if errors else "")
     add("All metadata recordings processed", set(meta["recording_id"]) == set(store),
         f"metadata={len(meta)}, processed={len(store)}")
     add("Feature table has one row per recording, IDs match metadata",
         len(df) == len(meta) and set(df["recording_id"]) == set(meta["recording_id"]) and df["recording_id"].is_unique)
-    ok_shapes, ok_finite, ok_frames, bad = True, True, True, []
+    ok_shapes, ok_finite, bad = True, True, []
     for rid, s in store.items():
         n_expected = 1 + s["n_samples"] // PARAMS["hop_length"]
         for g in FEATURE_GROUPS:
@@ -221,11 +221,11 @@ def validate(meta: pd.DataFrame, df: pd.DataFrame, store: dict, errors: list,
         f"missing flags for: {missing_flags}" if missing_flags else "")
     add("Flagged recordings were kept (none removed)", len(df) == len(meta),
         f"{int((df['quality_flags'].astype(str) != '').sum())} flagged recordings retained")
-    return checks, all(ok for _, ok, _ in checks)
+    return checks, checks.passed
 
 
 def format_validation_summary(meta, df, store, errors, checks, passed) -> str:
-    per_accent = {a.accent: int((df["accent"] == a.accent).sum()) for a in cfg.ACCENTS}
+    per_accent = {a: int((df["accent"] == a).sum()) for a in cfg.ordered_accents(cfg.configured_accents() + list(df["accent"]))}
     frames = {rid: s["mfcc"].shape[1] for rid, s in store.items()}
     L = ["Phase 3 – MFCC extraction and validation summary", "=" * 50, "",
          "Extraction parameters:"]
@@ -239,6 +239,6 @@ def format_validation_summary(meta, df, store, errors, checks, passed) -> str:
           f"Features per recording : 13 coefficients x (MFCC, delta, delta-delta) x (mean, std) = 78",
           f"Recordings with Phase 2 quality flags kept: {int((df['quality_flags'].astype(str) != '').sum())}", "",
           "Validation checks:"]
-    L += [f"  [{'PASS' if ok else 'FAIL'}] {name}" + (f"  -> {detail}" if detail else "") for name, ok, detail in checks]
+    L += common.CheckList(checks).format_lines(arrow="  -> ")
     L += ["", f"OVERALL: {'ALL CHECKS PASSED' if passed else 'SOME CHECKS FAILED'}"]
     return "\n".join(L) + "\n"

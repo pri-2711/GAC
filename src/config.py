@@ -17,6 +17,14 @@ PROCESSED_WAV_DIR = PROCESSED_DIR / "wav"
 REPORTS_DIR = PROCESSED_DIR / "reports"
 METADATA_CSV = DATASET_DIR / "recordings_metadata.csv"
 
+# Results of later phases (single source of truth; phase modules alias these)
+RESULTS_DIR = PROJECT_ROOT / "results"
+AUDIO_ANALYSIS_DIR = RESULTS_DIR / "audio_analysis"      # Phase 2
+MFCC_DIR = RESULTS_DIR / "mfcc"                          # Phase 3
+FEATURE_ANALYSIS_DIR = RESULTS_DIR / "feature_analysis"  # Phase 4
+PHASE2_METRICS_CSV = AUDIO_ANALYSIS_DIR / "audio_quality_metrics.csv"
+PROJECT_REPORTS_DIR = PROJECT_ROOT / "reports"           # human-readable reports (not REPORTS_DIR above)
+
 # --- Target audio specification ----------------------------------------------
 TARGET_SAMPLE_RATE = 16_000
 TARGET_CHANNELS = 1
@@ -44,3 +52,19 @@ ACCENTS: tuple[AccentConfig, ...] = (
     # dataset/south-Gujarat/surti/ and rerunning the pipeline is enough.
     AccentConfig("Surti",       "South Gujarat",   "SUR_S01", "SUR", ("surti",)),
 )
+
+
+def configured_accents() -> list[str]:
+    """Accent names defined in ACCENTS (including accents with no recordings yet, e.g. Surti)."""
+    return [a.accent for a in ACCENTS]
+
+
+def ordered_accents(present) -> list[str]:
+    """Accents found in the data: configured ones first (config order), then any others alphabetically.
+
+    Used everywhere an accent list is needed, so code never assumes exactly four classes and
+    never silently drops an accent that is present in the data.
+    """
+    present = list(dict.fromkeys(present))
+    known = [a for a in configured_accents() if a in present]
+    return known + sorted(a for a in present if a not in known)

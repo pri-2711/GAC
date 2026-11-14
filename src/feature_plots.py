@@ -11,26 +11,16 @@ import matplotlib.pyplot as plt
 
 import feature_analysis as fa
 import mfcc_features as mf
+import plot_utils
 
-plt.rcParams.update({"figure.dpi": 100, "savefig.dpi": 200, "axes.spines.top": False,
-                     "axes.spines.right": False, "font.size": 10, "axes.titlesize": 11,
-                     "axes.grid": True, "grid.alpha": 0.2})
+plot_utils.apply_style()
+legend_handles = plot_utils.legend_handles
+_legend_handles = legend_handles          # old private name, kept for existing notebooks
 
 
 def save(fig, name: str, show: bool = True):
-    fa.FIG_DIR.mkdir(parents=True, exist_ok=True)
-    path = fa.FIG_DIR / name
-    fig.savefig(path, bbox_inches="tight")
-    print("saved:", path.relative_to(fa.cfg.PROJECT_ROOT).as_posix())
-    if show:
-        plt.show()
-    plt.close(fig)
-
-
-def _legend_handles(accents, colors, formats, markers):
-    h = [plt.Line2D([], [], marker="o", ls="", color=colors[a], label=a) for a in accents]
-    h += [plt.Line2D([], [], marker=markers[f], ls="", color="grey", mfc="none", label=f"{f} file") for f in formats]
-    return h
+    """Save a Phase 4 figure into results/feature_analysis/figures/."""
+    plot_utils.save_figure(fig, fa.FIG_DIR / name, show)
 
 
 def _strip(ax, df, col, accents, colors, markers, box=True):
@@ -62,7 +52,7 @@ def feature_grid(table, group, stat, accents, colors, markers, title, name, ylab
         axes[k].set_title(f"{mf.FEATURE_GROUPS[group]} {k + 1} ({stat})")
     for ax in axes[mf.N_COEF:]:
         ax.axis("off")
-    axes[13].legend(handles=_legend_handles(accents, colors, formats, markers), loc="upper left", frameon=False)
+    axes[13].legend(handles=legend_handles(accents, colors, formats, markers), loc="upper left", frameon=False)
     axes[13].text(0.0, 0.05, "Each dot = one recording." + chr(10) + "Boxes: middle half of recordings." + chr(10) + ylabel_note,
                   transform=axes[13].transAxes, fontsize=9, va="bottom")
     fig.suptitle(title, y=0.995)
@@ -139,7 +129,7 @@ def pairwise_means(table, cols, accents, colors, markers, name, title):
                         ax.scatter(s[cj], s[ci], color=colors[a], marker=markers[fmt], s=26, edgecolor="black", linewidth=0.4)
             if i == n - 1: ax.set_xlabel(fa.feature_label(cj), fontsize=8)
             if j == 0: ax.set_ylabel(fa.feature_label(ci), fontsize=8)
-    axes[0, n - 1].legend(handles=_legend_handles(accents, colors, sorted(markers), markers), frameon=False, fontsize=7,
+    axes[0, n - 1].legend(handles=legend_handles(accents, colors, sorted(markers), markers), frameon=False, fontsize=7,
                           loc="upper right")
     fig.suptitle(title, y=1.0); fig.tight_layout(); save(fig, name)
 
@@ -171,7 +161,6 @@ def correlation_heatmap(corr: pd.DataFrame, name, title):
     n = len(corr)
     for b in range(0, n, 26):
         ax.axhline(b - 0.5, color="black", lw=1); ax.axvline(b - 0.5, color="black", lw=1)
-    ticks = list(range(6, n, 26)) + list(range(19, n, 26))
     ax.set_xticks(range(0, n, 2)); ax.set_xticklabels([corr.columns[i].replace("_", " ") for i in range(0, n, 2)],
                                                      rotation=90, fontsize=5)
     ax.set_yticks(range(0, n, 2)); ax.set_yticklabels([corr.index[i].replace("_", " ") for i in range(0, n, 2)], fontsize=5)

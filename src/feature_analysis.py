@@ -10,19 +10,19 @@ device/format and wording are inseparable, so no significance tests are done.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 from itertools import combinations
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 import audio_analysis as aa
+import common
 import config as cfg
 import mfcc_features as mf
+import plot_utils
 
-FA_DIR = cfg.PROJECT_ROOT / "results" / "feature_analysis"
+FA_DIR = cfg.FEATURE_ANALYSIS_DIR
 FIG_DIR = FA_DIR / "figures"
 PHASE3_CSV = mf.MFCC_DIR / "mfcc_recording_features.csv"
 PHASE3_SCHEMA = mf.MFCC_DIR / "mfcc_feature_columns.json"
@@ -41,34 +41,12 @@ ETA_HIGH, ETA_MODERATE = 0.60, 0.30
 FORMAT_DOMINATED_ETA, FORMAT_PARTIAL_ETA, WITHIN_FORMAT_ETA = 0.50, 0.30, 0.30
 CORR_STRONG = 0.50
 
-_FALLBACK_COLORS = ["#8E44AD", "#D55E00", "#56B4E9", "#F0E442", "#000000"]
-_BASE_COLORS = {"Ahmedabad": "#0072B2", "Kutchi": "#E69F00", "Mehsani": "#009E73",
-                "Kathiyawadi": "#CC79A7", "Surti": "#D55E00"}     # same palette as Phases 2-3
-
-
-# --------------------------------------------------------------------------- #
-# Dynamic categories
-# --------------------------------------------------------------------------- #
-def ordered_accents(present) -> list[str]:
-    """Configured accents first (config order), then any unconfigured ones alphabetically."""
-    present = list(dict.fromkeys(present))
-    known = [a.accent for a in cfg.ACCENTS if a.accent in present]
-    return known + sorted(a for a in present if a not in known)
-
-
-def configured_accents() -> list[str]:
-    return [a.accent for a in cfg.ACCENTS]
-
-
-def accent_colors(accents) -> dict[str, str]:
-    colors, extra = {}, iter(_FALLBACK_COLORS)
-    for a in accents:
-        colors[a] = _BASE_COLORS.get(a) or next(extra, "#555555")
-    return colors
-
-
-def format_markers(formats) -> dict[str, str]:
-    return {f: m for f, m in zip(sorted(set(formats)), ["o", "s", "^", "D", "v", "P"])}
+# Accent / colour / marker helpers now live in config.py and plot_utils.py; re-exported here so
+# existing notebooks (fa.ordered_accents, fa.accent_colors, ...) keep working.
+ordered_accents = cfg.ordered_accents
+configured_accents = cfg.configured_accents
+accent_colors = plot_utils.accent_colors
+format_markers = plot_utils.format_markers
 
 
 # --------------------------------------------------------------------------- #
@@ -95,12 +73,11 @@ def feature_label(name: str) -> str:
 def load_inputs() -> dict:
     """Load Phase 1 metadata, Phase 2 quality metrics and Phase 3 features; run consistency checks."""
     schema = load_schema()
-    meta = pd.read_csv(cfg.METADATA_CSV)
-    meta = meta[meta["conversion_status"].astype(str).str.startswith("success")].reset_index(drop=True)
+    meta = common.load_metadata()
     feats = pd.read_csv(PHASE3_CSV)
-    p2 = pd.read_csv(aa.RESULTS_DIR / "audio_quality_metrics.csv")
-    checks = []
-    add = lambda name, ok, detail="": checks.append((name, bool(ok), detail))
+    p2 = common.load_quality_metrics()
+    checks = common.CheckList()
+    add = checks.add
 
     ids_meta, ids_feat, ids_p2 = set(meta.recording_id), set(feats.recording_id), set(p2.recording_id)
     add("Recording IDs: Phase 1 metadata == Phase 3 features", ids_meta == ids_feat,
@@ -111,8 +88,8 @@ def load_inputs() -> dict:
     m = meta.set_index("recording_id")
     f = feats.set_index("recording_id")
     for col in ("accent", "speaker_id", "region", "original_format"):
-        common = f.index.intersection(m.index)
-        add(f"'{col}' agrees between Phase 1 and Phase 3", (f.loc[common, col] == m.loc[common, col]).all())
+        shared_ids = f.index.intersection(m.index)
+        add(f"'{col}' agrees between Phase 1 and Phase 3", (f.loc[shared_ids, col] == m.loc[shared_ids, col]).all())
     add("Phase 3 feature columns match mfcc_feature_columns.json exactly (names and order)",
         [c for c in feats.columns if c in set(schema["features"])] == schema["features"],
         f"{len(schema['features'])} columns")
@@ -238,7 +215,7 @@ def compute_speech_frames(meta: pd.DataFrame, ids: list[str], min_speech_frames:
          window, and shift_sensitivity() below shows the results are insensitive to it.)
     """
     paths = meta.set_index("recording_id")["processed_file_path"]
-    p2 = pd.read_csv(aa.RESULTS_DIR / "audio_quality_metrics.csv").set_index("recording_id")
+    p2 = common.load_quality_metrics().set_index("recording_id")
     out, lags = {}, np.arange(-3, 4)
     same_framing = (aa.HOP_LENGTH == mf.PARAMS["hop_length"] and aa.FRAME_LENGTH == mf.PARAMS["win_length"]
                     and mf.PARAMS["center"])
@@ -452,11 +429,7 @@ def add_candidate_flag(fs: pd.DataFrame) -> pd.DataFrame:
 # --------------------------------------------------------------------------- #
 def snapshot_hashes() -> dict[str, str]:
     """SHA-256 of Phase 1-3 outputs (so we can prove Phase 4 did not change them)."""
-    roots = [cfg.METADATA_CSV, aa.RESULTS_DIR, mf.MFCC_DIR, cfg.PROCESSED_WAV_DIR,
-             cfg.PROJECT_ROOT / "reports" / "audio_analysis_report.md",
-             cfg.PROJECT_ROOT / "reports" / "mfcc_extraction_report.md"]
-    out = {}
-    for r in roots:
-        for p in ([r] if r.is_file() else sorted(q for q in r.rglob("*") if q.is_file())):
-            out[p.relative_to(cfg.PROJECT_ROOT).as_posix()] = hashlib.sha256(p.read_bytes()).hexdigest()
-    return out
+    roots = [cfg.METADATA_CSV, cfg.AUDIO_ANALYSIS_DIR, cfg.MFCC_DIR, cfg.PROCESSED_WAV_DIR,
+             cfg.PROJECT_REPORTS_DIR / "audio_analysis_report.md",
+             cfg.PROJECT_REPORTS_DIR / "mfcc_extraction_report.md"]
+    return common.hash_files(roots)
