@@ -1,0 +1,462 @@
+"""Phase 4 – exploratory analysis of the Phase 3 MFCC features (read-only).
+
+Everything is discovered from the data: accent names, original formats and the
+feature columns (from mfcc_feature_columns.json). No accent name is hard-coded in
+any processing logic, so a newly added accent (e.g. Surti) is included automatically
+once Phases 1-3 have been re-run on its genuine recordings.
+
+All statistics are DESCRIPTIVE. With one speaker per accent, accent, speaker,
+device/format and wording are inseparable, so no significance tests are done.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+from itertools import combinations
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+import audio_analysis as aa
+import config as cfg
+import mfcc_features as mf
+
+FA_DIR = cfg.PROJECT_ROOT / "results" / "feature_analysis"
+FIG_DIR = FA_DIR / "figures"
+PHASE3_CSV = mf.MFCC_DIR / "mfcc_recording_features.csv"
+PHASE3_SCHEMA = mf.MFCC_DIR / "mfcc_feature_columns.json"
+
+QUALITY_COLUMNS = ["speech_ratio", "noise_floor_dbfs", "duration_s", "clipped_sample_pct",
+                   "level_dev_db", "flag_clipping", "flag_level_inconsistent"]
+QUALITY_LABELS = {"speech_ratio": "Speech-frame share", "noise_floor_dbfs": "Noise floor (dBFS)",
+                  "duration_s": "Duration (s)", "clipped_sample_pct": "Clipped samples (%)",
+                  "level_dev_db": "Level deviation (dB)", "flag_clipping": "Clipping flag",
+                  "flag_level_inconsistent": "Level-inconsistent flag"}
+
+# A-priori screening thresholds (fixed before looking at results; descriptive only).
+# eta^2 = share of a feature's variance between recordings that is explained by the grouping.
+# With n recordings and k groups, pure chance gives about (k-1)/(n-1) on average (~0.11 here).
+ETA_HIGH, ETA_MODERATE = 0.60, 0.30
+FORMAT_DOMINATED_ETA, FORMAT_PARTIAL_ETA, WITHIN_FORMAT_ETA = 0.50, 0.30, 0.30
+CORR_STRONG = 0.50
+
+_FALLBACK_COLORS = ["#8E44AD", "#D55E00", "#56B4E9", "#F0E442", "#000000"]
+_BASE_COLORS = {"Ahmedabad": "#0072B2", "Kutchi": "#E69F00", "Mehsani": "#009E73",
+                "Kathiyawadi": "#CC79A7", "Surti": "#D55E00"}     # same palette as Phases 2-3
+
+
+# --------------------------------------------------------------------------- #
+# Dynamic categories
+# --------------------------------------------------------------------------- #
+def ordered_accents(present) -> list[str]:
+    """Configured accents first (config order), then any unconfigured ones alphabetically."""
+    present = list(dict.fromkeys(present))
+    known = [a.accent for a in cfg.ACCENTS if a.accent in present]
+    return known + sorted(a for a in present if a not in known)
+
+
+def configured_accents() -> list[str]:
+    return [a.accent for a in cfg.ACCENTS]
+
+
+def accent_colors(accents) -> dict[str, str]:
+    colors, extra = {}, iter(_FALLBACK_COLORS)
+    for a in accents:
+        colors[a] = _BASE_COLORS.get(a) or next(extra, "#555555")
+    return colors
+
+
+def format_markers(formats) -> dict[str, str]:
+    return {f: m for f, m in zip(sorted(set(formats)), ["o", "s", "^", "D", "v", "P"])}
+
+
+# --------------------------------------------------------------------------- #
+# Loading and consistency checks
+# --------------------------------------------------------------------------- #
+def load_schema() -> dict:
+    schema = json.loads(PHASE3_SCHEMA.read_text(encoding="utf-8"))
+    return {"metadata": schema["metadata_columns_NOT_for_model_input"],
+            "features": schema["acoustic_feature_columns"],
+            "params": schema["extraction_parameters"]}
+
+
+def split_feature_name(name: str) -> tuple[str, int, str]:
+    """'delta2_07_std' -> ('delta2', 7, 'std')."""
+    group, idx, stat = name.split("_")
+    return group, int(idx), stat
+
+
+def feature_label(name: str) -> str:
+    group, idx, stat = split_feature_name(name)
+    return f"{mf.FEATURE_GROUPS[group]} {idx} {stat}"
+
+
+def load_inputs() -> dict:
+    """Load Phase 1 metadata, Phase 2 quality metrics and Phase 3 features; run consistency checks."""
+    schema = load_schema()
+    meta = pd.read_csv(cfg.METADATA_CSV)
+    meta = meta[meta["conversion_status"].astype(str).str.startswith("success")].reset_index(drop=True)
+    feats = pd.read_csv(PHASE3_CSV)
+    p2 = pd.read_csv(aa.RESULTS_DIR / "audio_quality_metrics.csv")
+    checks = []
+    add = lambda name, ok, detail="": checks.append((name, bool(ok), detail))
+
+    ids_meta, ids_feat, ids_p2 = set(meta.recording_id), set(feats.recording_id), set(p2.recording_id)
+    add("Recording IDs: Phase 1 metadata == Phase 3 features", ids_meta == ids_feat,
+        f"meta={len(ids_meta)}, features={len(ids_feat)}, only-meta={sorted(ids_meta - ids_feat)}, only-features={sorted(ids_feat - ids_meta)}")
+    add("Recording IDs: Phase 2 metrics cover every recording", ids_feat <= ids_p2,
+        f"missing in Phase 2: {sorted(ids_feat - ids_p2)}")
+    add("Recording IDs are unique", feats.recording_id.is_unique)
+    m = meta.set_index("recording_id")
+    f = feats.set_index("recording_id")
+    for col in ("accent", "speaker_id", "region", "original_format"):
+        common = f.index.intersection(m.index)
+        add(f"'{col}' agrees between Phase 1 and Phase 3", (f.loc[common, col] == m.loc[common, col]).all())
+    add("Phase 3 feature columns match mfcc_feature_columns.json exactly (names and order)",
+        [c for c in feats.columns if c in set(schema["features"])] == schema["features"],
+        f"{len(schema['features'])} columns")
+    add("Phase 3 feature columns match the schema generated by mfcc_features.py",
+        schema["features"] == mf.feature_column_names())
+    add("Extraction parameters in schema equal mfcc_features.PARAMS", schema["params"] == mf.PARAMS)
+    overlap_meta = set(schema["metadata"]) & set(schema["features"])
+    add("No metadata column is listed as an acoustic feature", not overlap_meta)
+    X = feats[schema["features"]].to_numpy(dtype=float)
+    add("No NaN/inf in the acoustic feature matrix", np.isfinite(X).all(),
+        f"{int((~np.isfinite(X)).sum())} bad values")
+    for rid in feats.recording_id:
+        if not (mf.FRAME_DIR / f"{rid}.npz").is_file():
+            add(f"NPZ exists for {rid}", False)
+    add("A frame-level NPZ exists for every recording", all((mf.FRAME_DIR / f"{r}.npz").is_file() for r in feats.recording_id))
+
+    qcols = ["recording_id"] + QUALITY_COLUMNS + ["speech_rms_dbfs", "peak_dbfs"]
+    table = feats.merge(p2[qcols], on="recording_id", how="left", suffixes=("", "_p2"))
+    for c in ("flag_clipping", "flag_level_inconsistent"):       # Phase 3 CSV already has them
+        if c + "_p2" in table:
+            add(f"'{c}' agrees between Phase 2 and Phase 3", (table[c].astype(bool) == table[c + "_p2"].astype(bool)).all())
+            table = table.drop(columns=c + "_p2")
+    table["flag_clipping"] = table["flag_clipping"].astype(int)
+    table["flag_level_inconsistent"] = table["flag_level_inconsistent"].astype(int)
+    add("Phase 2 quality metrics present for every recording", table[QUALITY_COLUMNS].notna().all().all())
+
+    accents = ordered_accents(table.accent)
+    return {"schema": schema, "meta": meta, "feats": feats, "p2": p2, "table": table,
+            "features": schema["features"], "accents": accents,
+            "configured_missing": [a for a in configured_accents() if a not in accents],
+            "formats": sorted(table.original_format.unique()), "checks": checks}
+
+
+# --------------------------------------------------------------------------- #
+# Descriptive statistics
+# --------------------------------------------------------------------------- #
+def accent_feature_statistics(table: pd.DataFrame, features: list[str], accents: list[str]) -> pd.DataFrame:
+    """Per accent and feature: n, mean, std, min, median, max over the recording-level values."""
+    rows = []
+    for accent in accents:
+        sub = table[table.accent == accent]
+        for f in features:
+            v = sub[f].to_numpy(float)
+            group, idx, stat = split_feature_name(f)
+            rows.append(dict(accent=accent, feature=f, feature_group=group, coefficient=idx, statistic=stat,
+                             n_recordings=len(v), mean=v.mean(), std=v.std(ddof=1) if len(v) > 1 else np.nan,
+                             min=v.min(), median=np.median(v), max=v.max()))
+    return pd.DataFrame(rows)
+
+
+def _ss(x: np.ndarray, labels: np.ndarray) -> float:
+    grand = x.mean()
+    return float(sum((labels == k).sum() * (x[labels == k].mean() - grand) ** 2 for k in np.unique(labels)))
+
+
+def eta_squared(x, labels) -> float:
+    """Share of variance explained by the grouping (0..1). NaN if undefined (<2 groups etc.)."""
+    x, labels = np.asarray(x, float), np.asarray(labels)
+    if len(np.unique(labels)) < 2 or len(x) <= len(np.unique(labels)):
+        return np.nan
+    sst = float(((x - x.mean()) ** 2).sum())
+    return np.nan if sst == 0 else _ss(x, labels) / sst
+
+
+def eta_squared_accent_given_format(x, accents, formats) -> float:
+    """Share of the variance NOT explained by format that accent still explains.
+
+    Uses accent-within-format cells: (SS_cells - SS_format) / (SS_total - SS_format).
+    NaN when there is only one format (nothing to condition on).
+    """
+    x = np.asarray(x, float)
+    accents, formats = np.asarray(accents), np.asarray(formats)
+    if len(np.unique(formats)) < 2:
+        return np.nan
+    cells = np.char.add(np.char.add(accents.astype(str), "|"), formats.astype(str))
+    sst = float(((x - x.mean()) ** 2).sum())
+    ssf = _ss(x, formats)
+    if sst - ssf <= 1e-12:
+        return np.nan
+    return (_ss(x, cells) - ssf) / (sst - ssf)
+
+
+def disjoint_pairs(x, accents) -> tuple[int, int]:
+    """(# accent pairs whose min-max ranges do not overlap, # accent pairs)."""
+    x, accents = np.asarray(x, float), np.asarray(accents)
+    groups = np.unique(accents)
+    ranges = {g: (x[accents == g].min(), x[accents == g].max()) for g in groups}
+    pairs = list(combinations(groups, 2))
+    n = sum(ranges[a][1] < ranges[b][0] or ranges[b][1] < ranges[a][0] for a, b in pairs)
+    return n, len(pairs)
+
+
+def corr_overall(x, y) -> float:
+    x, y = np.asarray(x, float), np.asarray(y, float)
+    return np.nan if x.std() == 0 or y.std() == 0 else float(np.corrcoef(x, y)[0, 1])
+
+
+def corr_within_accent(x, y, accents) -> float:
+    """Correlation after subtracting each accent's own mean from both variables.
+    This removes anything constant within a speaker (voice, device, format)."""
+    x, y, accents = np.asarray(x, float), np.asarray(y, float), np.asarray(accents)
+    xd, yd = x.copy(), y.copy()
+    for g in np.unique(accents):
+        m = accents == g
+        xd[m] -= x[m].mean(); yd[m] -= y[m].mean()
+    return corr_overall(xd, yd)
+
+
+# --------------------------------------------------------------------------- #
+# Speech / non-speech frames (Section D)
+# --------------------------------------------------------------------------- #
+def compute_speech_frames(meta: pd.DataFrame, ids: list[str], min_speech_frames: int = 20) -> dict:
+    """Recompute the Phase 2 energy-based speech mask for each recording (read-only) and
+    verify that it is aligned with the stored MFCC frames.
+
+    Alignment evidence (all must hold, otherwise the recording is marked unreliable):
+      1. same number of frames as the MFCC matrix;
+      2. both use hop 160 and centred frames, so frame i is centred on sample i*160;
+      3. the Phase 2 scalars recomputed here equal the saved Phase 2 CSV;
+      4. frame energy (dB) correlates with MFCC 1 most strongly within +/-1 frame (10 ms) of lag 0.
+         (Strict lag 0 holds for most recordings; the +/-1 frame tolerance was decided after
+         seeing that two noisy recordings peak at +1. It is far below the 25 ms analysis
+         window, and shift_sensitivity() below shows the results are insensitive to it.)
+    """
+    paths = meta.set_index("recording_id")["processed_file_path"]
+    p2 = pd.read_csv(aa.RESULTS_DIR / "audio_quality_metrics.csv").set_index("recording_id")
+    out, lags = {}, np.arange(-3, 4)
+    same_framing = (aa.HOP_LENGTH == mf.PARAMS["hop_length"] and aa.FRAME_LENGTH == mf.PARAMS["win_length"]
+                    and mf.PARAMS["center"])
+    for rid in ids:
+        y, sr = aa.load_audio(cfg.PROJECT_ROOT / paths[rid])
+        act = aa.speech_activity(y, sr)
+        z = mf.load_frame_npz(rid)
+        mfcc1, n_frames = z["mfcc"][0], z["mfcc"].shape[1]
+        mask = np.asarray(act["speech_mask"], bool)
+        lag_r = []
+        if len(mask) == n_frames:
+            for L in lags:
+                a = act["frame_db"][max(0, L):len(mask) + min(0, L)]
+                b = mfcc1[max(0, -L):n_frames + min(0, -L)]
+                lag_r.append(float(np.corrcoef(a, b)[0, 1]))
+        ref = p2.loc[rid]
+        scalars_match = (abs(act["speech_ratio"] - ref["speech_ratio"]) < 2e-3 and
+                         abs(act["leading_silence_s"] - ref["leading_silence_s"]) < 2e-3 and
+                         abs(act["trailing_silence_s"] - ref["trailing_silence_s"]) < 2e-3 and
+                         act["n_internal_pauses"] == ref["n_internal_pauses"])
+        times_match = np.allclose(z["frame_times"], np.arange(n_frames) * mf.PARAMS["hop_length"] / sr)
+        checks = {"same_frame_count": len(mask) == n_frames, "same_framing_parameters": bool(same_framing),
+                  "frame_times_match": bool(times_match), "phase2_scalars_reproduced": bool(scalars_match),
+                  "best_lag_within_one_frame": bool(lag_r) and abs(int(lags[int(np.argmax(lag_r))])) <= 1}
+        out[rid] = dict(mask=mask, frame_db=act["frame_db"], n_frames=n_frames, mask_checks=checks,
+                        lag_r=lag_r, best_lag_frames=int(lags[int(np.argmax(lag_r))]) if lag_r else None,
+                        aligned=all(checks.values()) and int(mask.sum()) >= min_speech_frames,
+                        r_at_lag0=lag_r[3] if lag_r else np.nan, speech_ratio_recomputed=act["speech_ratio"])
+    return out, lags
+
+
+def summarise_frames(frames: np.ndarray, mask: np.ndarray, groups=mf.FEATURE_GROUPS) -> dict:
+    """Mean/std (over the selected frames) for the 78 feature columns; NaN if no frames selected."""
+    row = {}
+    for g in groups:
+        mat = frames[g][:, mask]
+        for i in range(mf.N_COEF):
+            row[f"{g}_{i + 1:02d}_mean"] = float(mat[i].mean()) if mat.shape[1] else np.nan
+            row[f"{g}_{i + 1:02d}_std"] = float(mat[i].std()) if mat.shape[1] else np.nan
+    return row
+
+
+def shift_sensitivity(speech: dict, shift_frames: int = 1) -> pd.DataFrame:
+    """How much do speech-only means change if the mask is shifted by +/- shift_frames?
+
+    Returns per recording the largest absolute change in any MFCC 2-13 mean, and the change in
+    MFCC 1, relative to each coefficient's between-recording standard deviation (so the
+    numbers say 'fraction of the typical recording-to-recording spread').
+    """
+    rows = []
+    for rid, info in speech.items():
+        if not info["aligned"]:
+            continue
+        z = mf.load_frame_npz(rid)
+        base = summarise_frames(z, info["mask"])
+        for s in (-shift_frames, shift_frames):
+            shifted = np.roll(info["mask"], s)
+            if s > 0: shifted[:s] = False
+            else: shifted[s:] = False
+            alt = summarise_frames(z, shifted)
+            for i in range(mf.N_COEF):
+                rows.append(dict(recording_id=rid, shift=s, coefficient=i + 1,
+                                 abs_change=abs(alt[f"mfcc_{i + 1:02d}_mean"] - base[f"mfcc_{i + 1:02d}_mean"])))
+    return pd.DataFrame(rows)
+
+
+def speech_only_table(table: pd.DataFrame, speech: dict) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Speech-only and non-speech feature tables (same column names as the whole-recording table).
+
+    Delta / delta-delta are taken from the stored whole-recording matrices (computed with
+    context from neighbouring frames) and then restricted to the selected frames.
+    """
+    rows_sp, rows_ns = [], []
+    for _, r in table.iterrows():
+        rid = r["recording_id"]
+        info = speech[rid]
+        z = mf.load_frame_npz(rid)
+        mask = info["mask"] if info["aligned"] else np.zeros(info["n_frames"], bool)
+        base = {c: r[c] for c in mf.META_COLUMNS}
+        base.update(n_frames_total=info["n_frames"], n_speech_frames=int(mask.sum()),
+                    pct_speech_frames=100 * mask.mean(), alignment_verified=bool(info["aligned"]))
+        rows_sp.append({**base, **(summarise_frames(z, mask) if info["aligned"] else
+                                   {c: np.nan for c in mf.feature_column_names()})})
+        rows_ns.append({**base, **(summarise_frames(z, ~mask) if info["aligned"] else
+                                   {c: np.nan for c in mf.feature_column_names()})})
+    return pd.DataFrame(rows_sp), pd.DataFrame(rows_ns)
+
+
+# --------------------------------------------------------------------------- #
+# Summary tables
+# --------------------------------------------------------------------------- #
+def separation_class(eta: float) -> str:
+    if not np.isfinite(eta):
+        return "undefined"
+    return "high" if eta >= ETA_HIGH else "moderate" if eta >= ETA_MODERATE else "low"
+
+
+def format_comparison(table_all: pd.DataFrame, table_sp: pd.DataFrame, features: list[str]) -> pd.DataFrame:
+    rows = []
+    formats = sorted(table_all.original_format.unique())
+    for f in features:
+        row = {"feature": f, "label": feature_label(f)}
+        for tag, t in (("all", table_all), ("speech", table_sp)):
+            ok = t[f].notna()
+            for fmt in formats:
+                v = t.loc[ok & (t.original_format == fmt), f]
+                row[f"mean_{fmt}_{tag}"] = v.mean() if len(v) else np.nan
+                row[f"std_{fmt}_{tag}"] = v.std(ddof=1) if len(v) > 1 else np.nan
+            tt = t[ok]
+            row[f"eta2_format_{tag}"] = eta_squared(tt[f], tt.original_format)
+            row[f"eta2_accent_{tag}"] = eta_squared(tt[f], tt.accent)
+            row[f"eta2_accent_given_format_{tag}"] = eta_squared_accent_given_format(tt[f], tt.accent, tt.original_format)
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def quality_correlations(table_all: pd.DataFrame, table_sp: pd.DataFrame, features: list[str]) -> pd.DataFrame:
+    """Long table: feature x quality metric x {all, speech} x {overall, within-accent}."""
+    rows = []
+    for tag, t in (("all_frames", table_all), ("speech_only", table_sp)):
+        t = t.merge(table_all[["recording_id"] + QUALITY_COLUMNS], on="recording_id", how="left", suffixes=("", "_q"))
+        for f in features:
+            ok = t[f].notna()
+            for q in QUALITY_COLUMNS:
+                x, y, a = t.loc[ok, f], t.loc[ok, q if q in t else q + "_q"], t.loc[ok, "accent"]
+                rows.append(dict(feature=f, label=feature_label(f), quality_metric=q, feature_set=tag,
+                                 n=int(ok.sum()), pearson_overall=corr_overall(x, y),
+                                 spearman_overall=corr_overall(x.rank(), y.rank()),
+                                 pearson_within_accent=corr_within_accent(x, y, a)))
+    return pd.DataFrame(rows)
+
+
+def feature_summary(table_all, table_sp, features, qcorr, fmt_cmp) -> pd.DataFrame:
+    """One row per feature: separation, overlap, format, quality, speech-only robustness, status."""
+    rows = []
+    fc = fmt_cmp.set_index("feature")
+    for f in features:
+        row = {"feature": f, "label": feature_label(f)}
+        row["feature_group"], row["coefficient"], row["statistic"] = split_feature_name(f)
+        for tag, t in (("all", table_all), ("speech", table_sp)):
+            ok = t[f].notna(); tt = t[ok]
+            n_dis, n_pairs = disjoint_pairs(tt[f], tt.accent) if tt.accent.nunique() > 1 else (0, 0)
+            row[f"eta2_accent_{tag}"] = eta_squared(tt[f], tt.accent)
+            row[f"separation_{tag}"] = separation_class(row[f"eta2_accent_{tag}"])
+            row[f"disjoint_accent_pairs_{tag}"] = n_dis
+            row[f"accent_pairs_{tag}"] = n_pairs
+            row[f"eta2_format_{tag}"] = fc.loc[f, f"eta2_format_{tag}"]
+            row[f"eta2_accent_given_format_{tag}"] = fc.loc[f, f"eta2_accent_given_format_{tag}"]
+        for tag in ("all_frames", "speech_only"):
+            q = qcorr[(qcorr.feature == f) & (qcorr.feature_set == tag)].set_index("quality_metric")
+            for m in ("speech_ratio", "noise_floor_dbfs", "duration_s"):
+                row[f"r_{m}_{tag}"] = q.loc[m, "pearson_overall"]
+                row[f"r_{m}_within_accent_{tag}"] = q.loc[m, "pearson_within_accent"]
+        # ---- rule-based status (descriptive, on the speech-only version) ----
+        eta_f, eta_gf = row["eta2_format_speech"], row["eta2_accent_given_format_speech"]
+        if not np.isfinite(row["eta2_accent_speech"]):
+            fmt_flag = "undefined"
+        elif np.isfinite(eta_f) and eta_f >= FORMAT_DOMINATED_ETA and (not np.isfinite(eta_gf) or eta_gf < WITHIN_FORMAT_ETA):
+            fmt_flag = "format-dominated"
+        elif np.isfinite(eta_f) and eta_f >= FORMAT_PARTIAL_ETA:
+            fmt_flag = "partly format-associated"
+        else:
+            fmt_flag = "not format-associated"
+        # Quality link: overall correlation mixes in speaker/format differences, so the rule uses the
+        # WITHIN-ACCENT correlation (accent mean removed): does the feature still move with speech
+        # share / noise floor across one speaker's own recordings?
+        q_within = np.nanmax([abs(row[f"r_{m}_within_accent_speech_only"]) for m in ("speech_ratio", "noise_floor_dbfs")])
+        q_overall = np.nanmax([abs(row[f"r_{m}_speech_only"]) for m in ("speech_ratio", "noise_floor_dbfs")])
+        if q_within >= CORR_STRONG:
+            qflag = "quality-sensitive within speaker"
+        elif q_overall >= CORR_STRONG:
+            qflag = "quality link only across speakers"
+        else:
+            qflag = "weak quality link"
+        shift = abs(row["eta2_accent_speech"] - row["eta2_accent_all"])
+        row["format_flag"], row["quality_flag"] = fmt_flag, qflag
+        row["max_abs_r_quality_within_accent_speechonly"] = q_within
+        row["max_abs_r_quality_overall_speechonly"] = q_overall
+        row["speech_only_stable"] = bool(shift <= 0.15)
+        sep = row["separation_speech"]
+        if sep in ("low", "undefined"):
+            status = "heavy overlap"
+        elif fmt_flag == "format-dominated":
+            status = "separation mostly follows format"
+        elif qflag == "quality-sensitive within speaker":
+            status = "separation present, quality-sensitive"
+        else:
+            status = "separation present, investigate further"
+        row["status"] = status
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def add_candidate_flag(fs: pd.DataFrame) -> pd.DataFrame:
+    """Mark features worth a closer look in later experiments (NOT a feature selection).
+
+    All four conditions must hold: separation not dominated by format, no strong within-speaker
+    quality link, unchanged after restricting to speech frames, and accent still explaining at
+    least half of the variance left over after format is accounted for.
+    Nothing is discarded: unflagged features stay in every table.
+    """
+    fs = fs.copy()
+    fs["candidate_for_follow_up"] = ((fs["status"] == "separation present, investigate further")
+                                     & fs["speech_only_stable"]
+                                     & (fs["eta2_accent_given_format_speech"] >= 0.5))
+    return fs
+
+
+# --------------------------------------------------------------------------- #
+# Provenance: confirm earlier phases were not modified
+# --------------------------------------------------------------------------- #
+def snapshot_hashes() -> dict[str, str]:
+    """SHA-256 of Phase 1-3 outputs (so we can prove Phase 4 did not change them)."""
+    roots = [cfg.METADATA_CSV, aa.RESULTS_DIR, mf.MFCC_DIR, cfg.PROCESSED_WAV_DIR,
+             cfg.PROJECT_ROOT / "reports" / "audio_analysis_report.md",
+             cfg.PROJECT_ROOT / "reports" / "mfcc_extraction_report.md"]
+    out = {}
+    for r in roots:
+        for p in ([r] if r.is_file() else sorted(q for q in r.rglob("*") if q.is_file())):
+            out[p.relative_to(cfg.PROJECT_ROOT).as_posix()] = hashlib.sha256(p.read_bytes()).hexdigest()
+    return out
