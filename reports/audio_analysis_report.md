@@ -4,7 +4,7 @@
 
 This report explains what we did in Phase 2, what every graph shows, what we found, and what it means. You do **not** need to open the Jupyter notebook to follow it. (The notebook is `notebooks/02_audio_analysis.ipynb` if you want the code.)
 
-> **One sentence to remember:** we have only **one speaker per accent** (for Surti this is a convention, see Section B), so every difference in this report could come from the *accent*, the *person*, the *microphone/app*, or the *room*. We cannot tell which. All findings are **descriptive and exploratory**, not proof about Gujarati regional accents in general.
+> **One sentence to remember:** we have only **one speaker per accent**, so every difference in this report could come from the *accent*, the *person*, the *microphone/app*, or the *room*. We cannot tell which. All findings are **descriptive and exploratory**, not proof about Gujarati regional accents in general.
 
 > **Update – Surti recordings added.** This report was first written for four accents (28 recordings). Genuine **Surti** recordings (7, all M4A) have since been added, and **every number, table and figure below now covers all five accents (35 recordings)**. The original four-accent findings are kept; wherever something is new or has changed it is marked **[NEW – Surti]** or **[CHANGED]**, and the section [What Changed After Adding Surti](#what-changed-after-adding-surti) summarises them. The last four-accent version is in the git history (commit `644befb`). The analysis methods and thresholds were **not** changed.
 
@@ -43,7 +43,7 @@ This report explains what we did in Phase 2, what every graph shows, what we fou
 | Noise floor | M4A (Ahmedabad, Kutchi) about −47 dBFS, OGG about −78 dBFS ("M4A noisy, OGG clean") | **[CHANGED]** Surti (also M4A) has the **noisiest background of all: −35 to −36 dBFS**, 10 to 15 dB above Ahmedabad and Kutchi. The noise floor is therefore **not** determined by the file format alone. |
 | Format and accent | Format and accent groups were perfectly tied (2 M4A accents, 2 OGG accents) | **[CHANGED]** M4A now covers three accents and OGG two, which loosens the tie, but Surti brings its own differences (different source sample rate and recording date, much noisier). Setup and accent remain mixed. |
 | Silence and pauses | Speech detector separated speech and pauses in all 28 recordings | **[NEW]** For Surti the detector reports about 99% speech, **no pauses** and no leading or trailing silence. This is an **artefact of the high background noise**, not evidence of continuous speech (see Section D4). |
-| One speaker per accent | Documented for the four accents | **[NEW – unverified]** The Surti recordings were grouped as one speaker (`SUR_S01`) by the project's folder convention. The collection notes do not say how many people recorded them. |
+| Speakers | 4 speakers, one per accent | **5 speakers, one per accent.** All seven Surti recordings belong to one speaker (`SUR_S01`), confirmed by the dataset collector. |
 
 ---
 
@@ -100,17 +100,17 @@ Phase 2 changed **no audio**. Nothing was denoised, trimmed, normalised or delet
 | Kutchi | Kutch | 7 | 1 | M4A |
 | Mehsani | North Gujarat | 7 | 1 | OGG |
 | Kathiyawadi | Saurashtra | 7 | 1 | OGG |
-| Surti **[NEW]** | South Gujarat | 7 | 1 (by folder convention, see note) | M4A |
+| Surti **[NEW]** | South Gujarat | 7 | 1 | M4A |
 
 - **35 recordings** in total (28 original + 7 Surti), all converted in Phase 1 to WAV, 16,000 Hz, mono, 16-bit.
 - Speaker IDs: `AHM_S01`, `KUT_S01`, `MEH_S01`, `KAT_S01` and `SUR_S01`. Seven recordings from one person are **not** seven independent speakers.
 - Speakers were allowed to change the prompt sentences to their regional wording, so the recordings do not contain exactly the same words.
 
-**[NEW – Surti] The Surti source files, and what is not known.**
+**[NEW – Surti] The Surti source files.**
 - Seven files named `surti-01-GAC.m4a` to `surti-07-GAC.m4a` (same naming pattern as the other accents). Nothing was renamed or changed.
 - They are AAC audio in M4A containers, **mono, 44,100 Hz, about 128 kb/s**, 8.3 to 10.8 s long. Their embedded creation time is **2026-11-15**.
 - The two earlier M4A accents (Ahmedabad, Kutchi) are **48,000 Hz** with creation times on 2026-11-09, so the Surti files were **recorded in a different session and probably with a different device or app**.
-- **Not known:** how many people recorded the Surti files and who they are. The files carry no speaker information. They were grouped as one speaker (`SUR_S01`) because every accent folder uses one speaker ID. This is a **convention, not a verified fact**. If the Surti recordings come from more than one person, the speaker IDs must be corrected and Phases 3 and 4 re-run.
+- **Speaker:** all seven Surti recordings belong to **one speaker (`SUR_S01`), confirmed by the dataset collector.** The speaker is therefore the same person throughout; the differences from the other M4A accents come from the recording session and setup, not from a mix of speakers.
 
 **Original sample rates (all mono).** Ahmedabad 48 kHz, Kutchi 48 kHz, Mehsani 48 kHz, Kathiyawadi **16 kHz**, Surti 44.1 kHz. Phase 1 resampled everything to 16 kHz with FFmpeg. *(An earlier version of the project README wrongly said the originals were already 16 kHz; this was corrected.)*
 
@@ -437,8 +437,8 @@ Leading silence ranges from about 0.04 s to 1.2 s, and trailing silence from 0 s
 **6. The speech detector fails on the Surti recordings. [NEW]**
 Because of the high background noise, the 30 dB rule reports about 99% speech and no pauses for Surti. *Possible effect:* any later step that relies on the speech/non-speech split (such as "speech-only" features) treats the Surti recordings differently from the others, and the pause statistics are not comparable. Phase 4 therefore tests a stricter threshold as a sensitivity check.
 
-**7. Surti's speaker identity and recording session are undocumented. [NEW]**
-The seven recordings were grouped as one speaker by convention, and their metadata shows a different session and sample rate from the other M4A accents. *Possible effect:* if there is more than one Surti speaker, "Surti" is a mix of people, and any feature that looks special for Surti may reflect the setup rather than a regional accent.
+**7. Surti was recorded in a different session on a probably different device. [NEW]**
+The Surti source files are 44.1 kHz and were created on 15 November, while the other M4A files are 48 kHz and from 9 November. The speaker is confirmed as one person (`SUR_S01`), so this is a difference in recording setup, not a mix of speakers. *Possible effect:* any feature that looks special for Surti may reflect that setup rather than a regional accent.
 
 **Also noted:** the Kutchi recording has steady tonal lines in its background, and the speech detector's pause counts are less reliable on the noisier M4A files (see Figure 9).
 
@@ -468,7 +468,7 @@ The seven recordings were grouped as one speaker by convention, and their metada
 - Seven recordings from one person are not seven independent samples of an accent.
 - We ran **no statistical tests**, because with this sample size they would be misleading.
 - Nothing here says that "Surti speakers speak shorter sentences", "Kathiyawadi speakers speak shorter sentences" or "Mehsani speakers pause more". It only says that *these recordings* differ this way.
-- **[NEW]** Whether Surti is one speaker or several is not documented, so even the "one speaker per accent" statement is only a convention for Surti.
+- **[NEW]** The dataset collector confirmed that all seven Surti recordings are from one speaker, so "one speaker per accent" holds for all five accents.
 
 ---
 
@@ -499,7 +499,7 @@ Phase 2 achieved what it set out to do, first for four accents and now for all f
 
 **What changed with Surti:** the dataset grew from 28 to 35 recordings; the noise-floor picture changed from two levels to three; and we found a limit of the speech detector on noisy recordings. **What did not change:** all earlier measurements of the 28 original recordings, and the quality flags.
 
-Because there is (by convention) one speaker per accent, none of this tells us about Gujarati regional accents in general. The next phases have already been re-run on the five-accent dataset, with all quality flags kept, the original audio untouched, and an honest warning that results may partly reflect the recording setup.
+Because there is one speaker per accent, none of this tells us about Gujarati regional accents in general. The next phases have already been re-run on the five-accent dataset, with all quality flags kept, the original audio untouched, and an honest warning that results may partly reflect the recording setup.
 
 ---
 

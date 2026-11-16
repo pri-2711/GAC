@@ -6,7 +6,7 @@ This report explains what we did in Phase 3, what every graph shows, what we fou
 
 > **Update – Surti recordings added.** This report was first written for four accents (28 recordings). Genuine **Surti** recordings (7, all M4A) have since been added, and **every number, table and figure below now covers all five accents (35 recordings)**. The extraction parameters and the feature schema are **exactly the same**, and the features of the 28 earlier recordings are **identical** (all 28 table rows and all 28 NPZ arrays were compared). Wherever something is new or has changed it is marked **[NEW – Surti]** or **[CHANGED]**; [What Changed After Adding Surti](#what-changed-after-adding-surti) summarises it. The last four-accent version is in the git history (commit `644befb`).
 
-> **One sentence to remember:** we have only **one speaker per accent** (for Surti this is a convention, see Section 5), so every difference in these features could come from the *accent*, the *person*, the *microphone/app*, the *room*, the *file format*, or the *words used*. We cannot tell which. Everything below is **descriptive and exploratory**, not proof that MFCCs can tell Gujarati accents apart.
+> **One sentence to remember:** we have only **one speaker per accent**, so every difference in these features could come from the *accent*, the *person*, the *microphone/app*, the *room*, the *file format*, or the *words used*. We cannot tell which. Everything below is **descriptive and exploratory**, not proof that MFCCs can tell Gujarati accents apart.
 
 ---
 
@@ -177,10 +177,10 @@ For each recording we loaded the Phase 1 WAV file as it is (no resampling, no no
 | Kutchi | Kutch | 7 | 1 (`KUT_S01`) | M4A | 10,558 |
 | Mehsani | North Gujarat | 7 | 1 (`MEH_S01`) | OGG | 9,948 |
 | Kathiyawadi | Saurashtra | 7 | 1 (`KAT_S01`) | OGG | 8,006 |
-| Surti **[NEW]** | South Gujarat | 7 | 1 (`SUR_S01`, by convention) | M4A | 6,537 |
+| Surti **[NEW]** | South Gujarat | 7 | 1 (`SUR_S01`) | M4A | 6,537 |
 
 - **35 recordings** in total, **44,664 frames** (one frame = 10 ms). The shortest recording has 829 frames (8.3 s, a Surti file); the longest has 1,826 frames (18.3 s).
-- **[NEW – Surti]** The seven genuine Surti recordings were picked up automatically from the updated metadata and processed with the same code and parameters. Nothing was invented. Their source files are 44.1 kHz M4A created on a different day from the other M4A accents (48 kHz), and **how many people recorded them is not documented**: `SUR_S01` follows the folder convention and is unverified.
+- **[NEW – Surti]** The seven genuine Surti recordings were picked up automatically from the updated metadata and processed with the same code and parameters. Nothing was invented. Their source files are 44.1 kHz M4A created on a different day from the other M4A accents (48 kHz), and all seven were recorded by **one speaker (`SUR_S01`), confirmed by the dataset collector**.
 - Speakers were allowed to adapt the prompt sentences to their own regional wording, so the recordings do not contain exactly the same words.
 - The 11 recordings flagged in Phase 2 (10 for minor clipping, 1 quieter Kutchi file) are **kept**. None of the Surti recordings is flagged.
 
@@ -452,7 +452,7 @@ Each number is the average of that accent's 7 recording-level means. The four ea
 
 ## 9. Limitations and Possible Sources of Bias
 
-1. **One speaker per accent.** Speaker voice, region, vocabulary, device and room are all mixed together. Seven recordings from one person are not seven independent samples of an accent. **[NEW]** For Surti, the single-speaker grouping (`SUR_S01`) is only a folder convention: the number of Surti speakers is not documented.
+1. **One speaker per accent.** Speaker voice, region, vocabulary, device and room are all mixed together. Seven recordings from one person are not seven independent samples of an accent. For Surti, the dataset collector has confirmed that all seven recordings are from one speaker (`SUR_S01`).
 2. **Recording format and setup tied to accent. [CHANGED – partly]** Ahmedabad, Kutchi and (new) Surti are M4A; Mehsani and Kathiyawadi are OGG. Format and accent are no longer perfectly aligned, but every accent still has its own recording setup. Noise floor medians: Ahmedabad and Kutchi about −47 to −50, Surti about −36, OGG about −77.5 dBFS. Format-level averages differ, for example MFCC 1 −415.6 (M4A, now including Surti) versus −477.5 (OGG), and MFCC 3 −5.0 versus +10.3.
 3. **Silence and noise are included.** We did not remove pauses, so the features partly describe how much silence a recording contains.
 4. **No normalisation.** Features are raw values, so recording level and channel effects remain.

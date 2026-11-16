@@ -1,0 +1,11 @@
+accent_a,accent_b,PC1_ranges_overlap,PC2_ranges_overlap,centroid_distance_over_spread_PC1-2,centroid_distance_over_spread_PC1-5
+Ahmedabad,Kutchi,True,False,3.684940870430622,3.493235403159013
+Ahmedabad,Mehsani,True,True,1.742599790702633,3.079449742763932
+Ahmedabad,Kathiyawadi,False,True,5.888005350734103,4.560505709905357
+Ahmedabad,Surti,True,True,2.420478164002497,2.8113702172865094
+Kutchi,Mehsani,True,False,3.207736366525219,3.4545200518675383
+Kutchi,Kathiyawadi,False,False,7.745911677898851,5.169791055569163
+Kutchi,Surti,True,False,6.875554571679033,3.2701631853266826
+Mehsani,Kathiyawadi,False,True,4.861985766521796,3.9104436388302743
+Mehsani,Surti,False,False,4.585056484464345,3.043428777063264
+Kathiyawadi,Surti,False,False,8.569457101859848,4.669316783848293

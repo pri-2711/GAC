@@ -2,7 +2,7 @@
 
 An audio-based machine-learning research project that investigates whether regional Gujarati speech accents can be recognised from voice recordings.
 
-> **Status:** research prototype. Phases 1 to 4 (data preparation, audio analysis, MFCC feature extraction, feature analysis) are **completed** and have been **re-run on all five accents** after genuine Surti recordings were added. Model development has **not** started. The dataset has **five accent classes and one speaker per accent** (for Surti this is a folder convention, not a verified fact), so all findings so far are **preliminary and exploratory**.
+> **Status:** research prototype. Phases 1 to 4 (data preparation, audio analysis, MFCC feature extraction, feature analysis) are **completed** and have been **re-run on all five accents** after genuine Surti recordings were added. Model development has **not** started. The dataset has **five accent classes and one speaker per accent**, so all findings so far are **preliminary and exploratory**.
 
 ---
 
@@ -56,13 +56,13 @@ This project investigates whether **acoustic features extracted from audio** can
 | Kutchi | Kutch | 7 | 1 | M4A |
 | Mehsani | North Gujarat | 7 | 1 | OGG |
 | Kathiyawadi | Saurashtra | 7 | 1 | OGG |
-| Surti | South Gujarat | 7 | 1 (by folder convention, unverified) | M4A |
+| Surti | South Gujarat | 7 | 1 | M4A |
 | **Total** | | **35** | **5** | |
 
 - The 35 recordings last 8.3 to 18.3 seconds each (about 7.4 minutes in total).
 - All speakers were given common Gujarati sentence prompts but were allowed to adapt them to their own regional vocabulary and speaking style, so the recordings do not contain identical words. Nothing was translated, standardised or transcribed.
 - **Each accent has only one speaker. This is a significant limitation.** The dataset must not be taken as representative of the entire regional population.
-- **Surti:** the seven files (`surti-01-GAC.m4a` to `surti-07-GAC.m4a`) are 44.1 kHz M4A created on 2026-11-15, whereas the other two M4A accents are 48 kHz and were created on 2026-11-09, so Surti was recorded in a **different session, probably on a different device or app**. **The number of Surti speakers is not documented**: all seven files are grouped as `SUR_S01` by the one-speaker-per-folder convention, which is not a verified identity. No synthetic or substitute data was used.
+- **Surti:** the seven files (`surti-01-GAC.m4a` to `surti-07-GAC.m4a`) are 44.1 kHz M4A created on 2026-11-15, whereas the other two M4A accents are 48 kHz and were created on 2026-11-09, so Surti was recorded in a **different session, probably on a different device or app**. **All seven Surti recordings belong to one speaker (`SUR_S01`), as confirmed by the dataset collector.** No synthetic or substitute data was used.
 
 ## 5. Technology stack
 
@@ -81,7 +81,7 @@ Everything listed here is used in the repository (see `requirements.txt` for the
 | **Jupyter** (`ipykernel`, `nbformat`, `nbclient`) | The four phase notebooks, and `scripts/run_notebooks.py`, which runs them headlessly. |
 | **Git** | Version control. |
 
-Machine-learning libraries (for example scikit-learn) will be added when Phase 5 and Phase 6 begin; they are not used yet.
+Phase 5 (PCA) is implemented with NumPy only, so it adds no new dependency. Machine-learning libraries (for example scikit-learn) will be added when Phase 6 begins; they are not used yet.
 
 ## 6. Project workflow and phases
 
@@ -92,7 +92,7 @@ flowchart LR
     P1 --> P3[Phase 3<br/>MFCC extraction]
     P2 --> P4[Phase 4<br/>Feature analysis]
     P3 --> P4
-    P4 --> P5[Phase 5<br/>PCA - planned]
+    P4 --> P5[Phase 5<br/>PCA]
     P5 --> P6[Phase 6<br/>Model development - planned]
     P6 --> P7[Phase 7<br/>Evaluation - planned]
     P7 --> P8[Phase 8<br/>Prediction pipeline - planned]
@@ -105,7 +105,7 @@ flowchart LR
 | **2. Audio analysis and quality assessment** | Describe durations, waveforms, spectrograms, silence and pauses, clipping, loudness and background noise, without changing any audio. | Completed | `results/audio_analysis/` (figures and CSV tables, `audio_quality_metrics.csv`) |
 | **3. MFCC feature extraction** | Extract 13 MFCC, delta and delta-delta coefficients per 10 ms frame (the full frame-level matrices are kept) and summarise each recording by the mean and standard deviation of every coefficient (78 features). | Completed | `results/mfcc/frame_features/*.npz`, `results/mfcc/mfcc_recording_features.csv`, `results/mfcc/mfcc_feature_columns.json` |
 | **4. Feature analysis and comparison** | Examine which features overlap between accents and whether differences are influenced by silence, noise, original format or recording quality. Build speech-only versions of the features. | Completed | `results/feature_analysis/` (summary CSVs, speech-only features, 26 figures) |
-| **5. Dimensionality reduction (PCA)** | Explore structure in the feature space with PCA and related methods. | **Planned** | – |
+| **5. Dimensionality reduction (PCA)** | Explore the structure of the 78 features with PCA (exploratory only, not a classifier): variance, loadings, accent- and recording-condition patterns, Surti investigation, sensitivity analyses. | Completed | `results/pca/` (scores, variance, loadings, scaler+PCA model, figures), [`reports/pca_report.md`](reports/pca_report.md), `scripts/run_phase5.py` |
 | **6. Model development** | Train and compare classifiers with speaker-aware validation in mind. | **Planned** | – |
 | **7. Model evaluation** | Evaluate models honestly given the data limitations. | **Planned** | – |
 | **8. Prediction pipeline** | A reusable pipeline that takes a new recording and returns a predicted accent. | **Planned** | – |
@@ -138,11 +138,14 @@ flowchart LR
 │   ├── audio_analysis.py         Phase 2: speech activity and audio quality metrics
 │   ├── mfcc_features.py          Phase 3: MFCC / delta / delta-delta extraction and validation
 │   ├── feature_analysis.py       Phase 4: overlap, speech-only, format and quality analysis
+│   ├── pca_analysis.py           Phase 5: PCA (NumPy), loadings, condition and sensitivity analyses
+│   ├── pca_plots.py              Phase 5 figure functions
 │   ├── plot_utils.py             Shared plotting helpers (palette, style, saving)
 │   └── feature_plots.py          Phase 4 figure functions
 │
 ├── scripts/
 │   ├── run_phase1.py             Run Phase 1 from the command line
+│   ├── run_phase5.py             Run Phase 5 (PCA) and write results/pca/
 │   ├── run_notebooks.py          Run the phase notebooks headlessly
 │   └── validate_project.py       Run every project validation in one place
 │
@@ -155,13 +158,15 @@ flowchart LR
 ├── results/                     Generated numbers and figures
 │   ├── audio_analysis/           Phase 2 figures and CSV tables
 │   ├── mfcc/                     Phase 3: frame_features/ (NPZ), CSV tables, figures/
-│   └── feature_analysis/         Phase 4: CSV tables, figures/
+│   ├── feature_analysis/         Phase 4: CSV tables, figures/
+│   └── pca/                      Phase 5: scores, variance, loadings, model, tables, figures/
 │
 └── reports/                     Human-readable research reports
     ├── README.md                 Index of the reports
     ├── audio_analysis_report.md
     ├── mfcc_extraction_report.md
     ├── feature_analysis_report.md
+    ├── pca_report.md
     └── project_cleanup_audit.md  Code audit and cleanup record
 ```
 
@@ -195,9 +200,14 @@ Notes:
 - 51 of 78 features separate the five speakers strongly (η² ≥ 0.60 on speech frames; 49 before). With one speaker per accent this is expected and **is not evidence that the accents can be told apart.**
 - 35 features passed every screening rule and are listed as candidates for follow-up with more speakers (30 before; 7 were added, mostly Surti-driven energy features, and 2 dropped out). No feature was removed or selected.
 
+**Phase 5 – PCA (exploratory; see [`reports/pca_report.md`](reports/pca_report.md))**
+- PC1 to PC4 explain 33.5%, 12.0%, 10.2% and 8.7% of the variance (64.4% together); 9, 15 and 19 components are needed for 80%, 90% and 95%. PC1 to PC4 are above chance level (shuffled-data baseline), PC5 onwards is not.
+- Each of PC1 to PC4 is almost entirely one speaker/accent group (η² with the accent label 0.85 to 0.94), so the five groups form largely separate clouds. With one speaker per accent this is expected from voice and recording-session differences and **is not evidence of accent recognition**.
+- PC1 is dominated by variability (standard-deviation) features; removing MFCC 1 and 2 changes the structure very little. Surti forms its own cloud but does not drive PC1; its noisier session is a likely contributor, not an accent finding.
+
 ## 9. Scientific limitations
 
-- **One speaker per accent** (for Surti only by folder convention: the number of speakers is undocumented). Accent, speaker identity, vocabulary, microphone and room are mixed together and cannot be separated with these data.
+- **One speaker per accent** (confirmed for all five accents, including Surti). Accent, speaker identity, vocabulary, microphone and room are mixed together and cannot be separated with these data.
 - **Possible speaker-identity confounding.** Any difference between classes may reflect a person rather than a regional accent.
 - **Different original formats and recording conditions.** M4A covers three accents and OGG two, but every accent still has its own recording setup (noise floor, loudness, silence handling, source sample rate). Surti was recorded in a different session, probably on a different device.
 - **Limited sample size.** 35 recordings, 7 per speaker, which are not independent of each other. No significance tests were run, and none would be valid.
@@ -241,6 +251,12 @@ python scripts/validate_project.py          # add --quick to skip decoding every
 python scripts/run_phase1.py                # add --force to reconvert everything
 ```
 
+**Run Phase 5 (PCA)** (needs Phases 1–4; Phase 5 is a script, not a notebook):
+
+```bash
+python scripts/run_phase5.py                # writes results/pca/ and runs its 40 validation checks
+```
+
 **Run the notebooks** (each phase uses the outputs of the earlier ones):
 
 ```bash
@@ -260,6 +276,7 @@ Or open `notebooks/01_audio_standardization.ipynb` to `notebooks/04_feature_anal
 | Frame-level MFCC arrays (one `.npz` per recording) | `results/mfcc/frame_features/` |
 | Recording-level feature table and feature-column list | `results/mfcc/mfcc_recording_features.csv`, `results/mfcc/mfcc_feature_columns.json` |
 | Feature-analysis tables and figures | `results/feature_analysis/` |
+| PCA scores, loadings, saved scaler+PCA model, figures | `results/pca/` |
 | Research reports | `reports/` |
 
 Loading the features for your own experiments: read `results/mfcc/mfcc_feature_columns.json`. Use only the columns listed under `acoustic_feature_columns` as model inputs; never use recording IDs, speaker IDs, accent labels or quality flags as inputs.
@@ -272,13 +289,14 @@ Loading the features for your own experiments: read `results/mfcc/mfcc_feature_c
 | [`reports/audio_analysis_report.md`](reports/audio_analysis_report.md) | Phase 2: audio quality analysis and visualisation |
 | [`reports/mfcc_extraction_report.md`](reports/mfcc_extraction_report.md) | Phase 3: MFCC feature extraction |
 | [`reports/feature_analysis_report.md`](reports/feature_analysis_report.md) | Phase 4: feature analysis and comparison |
+| [`reports/pca_report.md`](reports/pca_report.md) | Phase 5: PCA and dimensionality reduction |
 | [`reports/project_cleanup_audit.md`](reports/project_cleanup_audit.md) | Code audit and cleanup record after Phase 4 |
 
 The reports are written in simple language, with embedded figures and tables, and can be read without opening the notebooks.
 
 ## 13. Future work
 
-- **Phase 5 – Dimensionality reduction (PCA).** Explore the feature space on both the whole-recording and the speech-only features, and colour the projections by accent *and* by original format to see which one the main components follow.
+- ~~Phase 5 – Dimensionality reduction (PCA)~~ **completed** (see the findings below and [`reports/pca_report.md`](reports/pca_report.md)).
 - **Phase 6 – Model development.** Train and compare classifiers using only the acoustic columns listed in `mfcc_feature_columns.json`. Keep the candidate features from Phase 4 as a starting point, not a final feature set.
 - **Phase 7 – Model evaluation.** Evaluate honestly. With one speaker per accent, scores on held-out recordings of the *same* speakers do not show accent recognition.
 - **Phase 8 – Prediction pipeline.** A reusable pipeline: new recording → standardised WAV → features → predicted accent.

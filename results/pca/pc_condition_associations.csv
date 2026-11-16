@@ -1,0 +1,65 @@
+component,condition,label,pearson_overall,pearson_within_accent
+PC1,speech_ratio,Speech-frame share (30 dB rule),-0.6753962001803677,0.262958751278812
+PC2,speech_ratio,Speech-frame share (30 dB rule),-0.5179439687047713,-0.38686255793213925
+PC3,speech_ratio,Speech-frame share (30 dB rule),0.2703279743363329,0.15444699200153336
+PC4,speech_ratio,Speech-frame share (30 dB rule),0.04877332726362243,0.31211679118136554
+PC5,speech_ratio,Speech-frame share (30 dB rule),-0.01736095603943565,-0.0075252155879623394
+PC6,speech_ratio,Speech-frame share (30 dB rule),0.17406937135061779,0.38097838513240506
+PC7,speech_ratio,Speech-frame share (30 dB rule),0.035227503532653436,-0.12048287141664919
+PC8,speech_ratio,Speech-frame share (30 dB rule),-0.1988849950562501,-0.43963099770070746
+PC1,pct_speech_frames_ref20,"Speech-frame share (20 dB rule, %)",-0.40835812699363366,0.4203437379998356
+PC2,pct_speech_frames_ref20,"Speech-frame share (20 dB rule, %)",-0.4186450379962152,-0.5346269564439069
+PC3,pct_speech_frames_ref20,"Speech-frame share (20 dB rule, %)",0.14949121276879093,0.08124020460367276
+PC4,pct_speech_frames_ref20,"Speech-frame share (20 dB rule, %)",-0.0580377326922857,0.21777739916267672
+PC5,pct_speech_frames_ref20,"Speech-frame share (20 dB rule, %)",0.18679678811398684,0.23680838367829216
+PC6,pct_speech_frames_ref20,"Speech-frame share (20 dB rule, %)",0.2861630884935963,0.34302507224222045
+PC7,pct_speech_frames_ref20,"Speech-frame share (20 dB rule, %)",-0.024360246821542874,-0.10284328226612535
+PC8,pct_speech_frames_ref20,"Speech-frame share (20 dB rule, %)",-0.3648210605560791,-0.42473398395464385
+PC1,noise_floor_dbfs,Noise floor (dBFS),-0.6964961207243883,0.42343604567298965
+PC2,noise_floor_dbfs,Noise floor (dBFS),-0.25573314011145076,-0.42424324960138976
+PC3,noise_floor_dbfs,Noise floor (dBFS),0.12583738438159506,0.36001519270524834
+PC4,noise_floor_dbfs,Noise floor (dBFS),0.5785861930416502,0.5044974066532025
+PC5,noise_floor_dbfs,Noise floor (dBFS),0.10102088257950576,0.19667179481925168
+PC6,noise_floor_dbfs,Noise floor (dBFS),-0.008160525007580981,0.05798497146956113
+PC7,noise_floor_dbfs,Noise floor (dBFS),0.01826327879058999,-0.022455083879151568
+PC8,noise_floor_dbfs,Noise floor (dBFS),-0.08291248950808806,-0.33088788552693577
+PC1,approx_snr_db,Approx. SNR (dB),0.6972862309307233,-0.3543818721153576
+PC2,approx_snr_db,Approx. SNR (dB),0.20174126899752493,0.31631179021867833
+PC3,approx_snr_db,Approx. SNR (dB),-0.14189393064438113,-0.38649287291012635
+PC4,approx_snr_db,Approx. SNR (dB),-0.6003837532854354,-0.517510347696159
+PC5,approx_snr_db,Approx. SNR (dB),-0.08046584150858531,-0.09940557148663008
+PC6,approx_snr_db,Approx. SNR (dB),-0.009252953192080507,-0.11692045473315277
+PC7,approx_snr_db,Approx. SNR (dB),-0.0037989371460907554,0.04732876420181014
+PC8,approx_snr_db,Approx. SNR (dB),0.07962629064671582,0.3434985976072793
+PC1,speech_level_dbfs,Speech level (dBFS),0.16699639033385985,0.14312989050497923
+PC2,speech_level_dbfs,Speech level (dBFS),-0.35774026677832693,0.056926590446136786
+PC3,speech_level_dbfs,Speech level (dBFS),0.18224769121465975,-0.18400040816887622
+PC4,speech_level_dbfs,Speech level (dBFS),-0.601776885757763,0.0209302703201436
+PC5,speech_level_dbfs,Speech level (dBFS),-0.025923589401389138,0.1337304068155134
+PC6,speech_level_dbfs,Speech level (dBFS),-0.2745182375237206,-0.5124736678851801
+PC7,speech_level_dbfs,Speech level (dBFS),0.3003239373499896,0.35783980233222445
+PC8,speech_level_dbfs,Speech level (dBFS),0.08360771102615831,0.14775190319589232
+PC1,overall_rms_dbfs,Overall RMS level (dBFS),0.006144304423433078,0.2792986213499487
+PC2,overall_rms_dbfs,Overall RMS level (dBFS),-0.5618508521560472,-0.26670013302288487
+PC3,overall_rms_dbfs,Overall RMS level (dBFS),0.13988134459688148,-0.18048414447493116
+PC4,overall_rms_dbfs,Overall RMS level (dBFS),-0.6331189765576795,-0.018944695216359227
+PC5,overall_rms_dbfs,Overall RMS level (dBFS),0.03870863221183312,0.31867576070129805
+PC6,overall_rms_dbfs,Overall RMS level (dBFS),-0.1565713383115044,-0.3847024248202379
+PC7,overall_rms_dbfs,Overall RMS level (dBFS),0.2500492048813406,0.28597371834590274
+PC8,overall_rms_dbfs,Overall RMS level (dBFS),0.00313572201602012,0.058800350702499386
+PC1,duration_s,Duration (s),-0.018776055298522883,0.14426934122008084
+PC2,duration_s,Duration (s),0.7221492815134413,0.5094204101446176
+PC3,duration_s,Duration (s),-0.309497117187506,0.12173446743702525
+PC4,duration_s,Duration (s),-0.02319508262450376,0.17183117323781072
+PC5,duration_s,Duration (s),0.10123634094403325,-0.08337417726588825
+PC6,duration_s,Duration (s),0.09878363744268362,0.13664478810106306
+PC7,duration_s,Duration (s),0.26074187587069725,0.5578052960453668
+PC8,duration_s,Duration (s),-0.060348499605226376,0.05794608359106291
+PC1,original_sample_rate_hz,Original sample rate (Hz),-0.8721366703370937,
+PC2,original_sample_rate_hz,Original sample rate (Hz),0.1928789341736958,
+PC3,original_sample_rate_hz,Original sample rate (Hz),-0.2478534753816507,
+PC4,original_sample_rate_hz,Original sample rate (Hz),-0.1789133092130009,
+PC5,original_sample_rate_hz,Original sample rate (Hz),0.17304484252434188,
+PC6,original_sample_rate_hz,Original sample rate (Hz),0.022409123085096593,
+PC7,original_sample_rate_hz,Original sample rate (Hz),-0.014809556986783792,
+PC8,original_sample_rate_hz,Original sample rate (Hz),-0.16355928390272242,

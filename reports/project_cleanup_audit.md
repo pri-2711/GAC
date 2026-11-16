@@ -179,7 +179,7 @@ Genuine Surti recordings were added after the cleanup above. This section record
 - `dataset/south-Gujarat/surti/` held **7 files**, all M4A, named `surti-01-GAC.m4a` … `surti-07-GAC.m4a` (the same pattern as the other accents). The count was not assumed; it was read from disk.
 - Probed with FFmpeg: AAC-LC, mono, **44.1 kHz**, ~128 kb/s, 8.3–10.8 s, embedded creation time **2026-11-15**. The Ahmedabad and Kutchi M4A files are 48 kHz, created 2026-11-09. So Surti comes from a **different session and probably a different device or app**.
 - Mapping: `config.py` already contained Surti (`surti` folder, prefix `SUR`, region South Gujarat). File names map to `SUR_S01_R01` … `R07` with the existing rule (number taken from the file name). No file was renamed or modified.
-- **Not documented, so not assumed:** how many people recorded the files. `SUR_S01` follows the one-speaker-per-folder convention and is flagged as **unverified** in `config.py`, the READMEs and all reports.
+- **Speaker:** at the time of integration the number of Surti speakers was not documented, so it was not assumed and `SUR_S01` was flagged as unverified. **This was later resolved:** the dataset collector confirmed that all seven recordings belong to one speaker (see Section G).
 
 ### F.2 What was run
 - **Phase 1:** 7 files converted, 28 skipped as already valid. 35 of 35 outputs validated (16 kHz, mono, PCM_16). The 28 existing metadata rows are identical; no raw recording or earlier processed WAV changed (SHA-256 compared).
@@ -191,7 +191,7 @@ Genuine Surti recordings were added after the cleanup above. This section record
 |---|---|
 | `src/audio_analysis.py` | `speech_activity` accepts an optional `speech_db_below_ref` (default unchanged, 30 dB) so Phase 4 can run a threshold sensitivity check. Default behaviour verified identical. |
 | `src/feature_analysis.py` | New `masks_at_threshold()` (re-uses the verified frame alignment). |
-| `src/config.py` | Updated the stale "pending data collection" comment for Surti; documents that the speaker identity is unverified. |
+| `src/config.py` | Updated the stale "pending data collection" comment for Surti (the speaker note added here was superseded by Section G). |
 | `scripts/validate_project.py` | New checks: every raw recording on disk is in the metadata (so a forgotten Phase 1 re-run is caught) and no raw audio sits in an unmapped folder; the new Phase 4 output files are expected. |
 | `notebooks/01–04` | Static text updated (no more "Surti pending", "28 recordings", four-accent observations); counts in titles made dynamic; notebooks 02 and 03 now use the shared palette (`plot_utils`) so Surti has the same colour in every phase (existing accents keep their exact colours). Notebook 04 gained section D2 (threshold sensitivity). |
 | Reports and READMEs | The Phase 2, 3 and 4 reports and both READMEs were updated; each report starts with a "What Changed After Adding Surti" section. The copies under `results/` are kept in sync with `reports/`. |
@@ -206,5 +206,17 @@ Genuine Surti recordings were added after the cleanup above. This section record
 `python scripts/validate_project.py`: **69 checks passed, 0 failed**, 237 Markdown links checked. Also confirmed: 35 recordings, 5 accents × 7, no duplicate IDs; all 35 WAVs valid; 35 NPZ files and 35 feature rows with no NaN or infinite values; every figure embedded in the reports exists and every figure is referenced.
 
 ### F.6 Remaining concerns
-- **Surti's speaker count is unknown**, and the recording session/device differs from the other accents. Any feature that makes Surti look special may be a setup effect (the features where Surti stands apart are mostly level- and variability-related).
+- **Surti's recording session and device differ from the other accents** (the speaker itself is confirmed as one person, see Section G). Any feature that makes Surti look special may be a setup effect (the features where Surti stands apart are mostly level- and variability-related).
 - The notebooks (and `results/audio_analysis/image.png`, see E.1) are unchanged in that respect: the stray screenshot is still there.
+
+---
+
+## G. Surti speaker confirmed (documentation-only update)
+
+The dataset collector confirmed that **all seven Surti recordings belong to the same speaker**. The speaker ID `SUR_S01` and the number of Surti speakers (1) are therefore confirmed facts, and the earlier "unverified" warning was removed everywhere.
+
+- **No data or results changed.** No audio, recording ID, speaker ID, metadata row or extracted feature changed (`SUR_S01` was already the ID in every output), so **Phases 1 to 4 were not re-run**.
+- **Text updated:** the comment in `src/config.py`; the root `README.md` (status line, dataset table, Surti note, limitations); the Phase 2, 3 and 4 reports and the copies next to the results (`results/audio_analysis/audio_analysis_report.md`, `results/mfcc/README.md`); the text cells of the four notebooks (stored outputs untouched); and Section F above.
+- **What was kept on purpose:** the observation that Surti was recorded in a different session on a probably different device (44.1 kHz source created 15 November, against 48 kHz created 9 November). That is a recording-setup difference and is still true; the reports now say it is a setup difference rather than a possible mix of speakers.
+- **Effect on the limitations:** "one speaker per accent" is now a confirmed property of all five accents. It remains the most important limitation, because accent, speaker, device and vocabulary cannot be separated with one speaker per class.
+- **Not recorded:** the date or form of the collector's confirmation was not provided, so none is stated.

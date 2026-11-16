@@ -1,0 +1,23 @@
+{
+  "source_features_csv": "results/mfcc/mfcc_recording_features.csv",
+  "source_sha256": "f3b36b3cfe67127f428b103049cc676d444cc7f85c483775b1d9b2e07c440848",
+  "schema": "results/mfcc/mfcc_feature_columns.json",
+  "n_recordings": 35,
+  "n_features_used": 78,
+  "dropped_zero_variance_features": [],
+  "accents": [
+    "Ahmedabad",
+    "Kutchi",
+    "Mehsani",
+    "Kathiyawadi",
+    "Surti"
+  ],
+  "n_components": 34,
+  "components_for_variance": {
+    "80%": 9,
+    "90%": 15,
+    "95%": 19
+  },
+  "scaler": "population std (ddof=0), as sklearn StandardScaler",
+  "pca": "SVD of the standardised matrix; explained variance uses n-1; sign: largest |loading| positive"
+}

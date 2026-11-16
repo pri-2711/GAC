@@ -42,7 +42,7 @@ def record(name: str, ok, detail: str = "") -> None:
 # --------------------------------------------------------------------------- #
 section("1. Imports")
 MODULES = ["config", "common", "plot_utils", "audio_utils", "audio_analysis",
-           "mfcc_features", "feature_analysis", "feature_plots"]
+           "mfcc_features", "feature_analysis", "feature_plots", "pca_analysis", "pca_plots"]
 for m in MODULES:
     try:
         importlib.import_module(m)
@@ -119,6 +119,43 @@ summary_txt = (cfg.FEATURE_ANALYSIS_DIR / "validation_summary.txt").read_text(en
 record("Phase 4 validation_summary.txt reports ALL CHECKS PASSED", "ALL CHECKS PASSED" in summary_txt)
 fs = pd.read_csv(cfg.FEATURE_ANALYSIS_DIR / "feature_analysis_summary.csv")
 record("feature_analysis_summary.csv has one row per schema feature, same order", list(fs.feature) == fa.load_schema()["features"])
+
+# --------------------------------------------------------------------------- #
+section("5b. Phase 5 - PCA outputs and report (read-only; re-run scripts/run_phase5.py to regenerate)")
+import numpy as np
+import pca_analysis as pa
+
+PCA = cfg.RESULTS_DIR / "pca"
+p5_files = ["pca_scores.csv", "explained_variance.csv", "pca_loadings.csv", "pca_model.npz", "pca_model_meta.json",
+            "pca_manifest.json", "loading_group_contributions.csv", "top_loadings.csv", "pc_grouping_eta2.csv",
+            "pc_accent_one_vs_rest_eta2.csv", "pc_condition_associations.csv", "accent_pair_separation.csv",
+            "outlier_summary.csv", "separation_metrics.csv", "leave_one_accent_out.csv", "sensitivity_summary.csv",
+            "sensitivity_scores.csv", "permutation_baseline.csv", "validation_summary.txt"]
+record("Phase 5 output files present", all((PCA / f).is_file() for f in p5_files),
+       f"missing: {[f for f in p5_files if not (PCA / f).is_file()]}")
+if (PCA / "pca_scores.csv").is_file():
+    sc5 = pd.read_csv(PCA / "pca_scores.csv")
+    feats5 = pd.read_csv(mf.MFCC_DIR / "mfcc_recording_features.csv")
+    pcs = [c for c in sc5.columns if c.startswith("PC")]
+    record("pca_scores.csv: same recordings/order as the Phase 3 feature table", list(sc5.recording_id) == list(feats5.recording_id))
+    record("pca_scores.csv has no NaN/inf", np.isfinite(sc5[pcs].to_numpy()).all(), f"{len(pcs)} components")
+    model5 = pa.load_model()
+    record("PCA model feature order == schema feature order", model5["features"] == fa.load_schema()["features"])
+    record("Saved PCA model reproduces pca_scores.csv from the Phase 3 features",
+           np.allclose(pa.transform(model5, feats5[model5["features"]].to_numpy(float)), sc5[pcs].to_numpy(), atol=1e-9))
+    record("Phase 5 validation_summary.txt: all checks passed",
+           (lambda s: s.split("checks passed")[0].split()[-1].split("/")[0] == s.split("checks passed")[0].split()[-1].split("/")[1])(
+               (PCA / "validation_summary.txt").read_text(encoding="utf-8")))
+    record("Phase 5 results cover every accent present", set(sc5.accent) == set(feats5.accent))
+rep5 = ROOT / "reports" / "pca_report.md"
+record("reports/pca_report.md exists", rep5.is_file())
+if rep5.is_file():
+    txt5 = rep5.read_text(encoding="utf-8")
+    heads = re.findall(r"^##\s+(\d+)\.", txt5, re.M)
+    record("pca_report.md contains the 19 required numbered sections", [int(h) for h in heads] == list(range(1, 20)), f"found {heads}")
+    figs_used = set(re.findall(r"\]\(\.\./results/pca/figures/([^)]+)\)", txt5))
+    figs_all = {q.name for q in (PCA / "figures").glob("*.png")}
+    record("pca_report.md embeds every Phase 5 figure", figs_used == figs_all, f"unreferenced: {sorted(figs_all - figs_used)}; missing: {sorted(figs_used - figs_all)}")
 
 # --------------------------------------------------------------------------- #
 section("6. Notebooks (stored outputs)")

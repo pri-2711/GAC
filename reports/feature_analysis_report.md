@@ -6,7 +6,7 @@ This report explains what we did in Phase 4, what every graph shows, what we fou
 
 > **Update – Surti recordings added.** This report was first written for four accents (28 recordings). Genuine **Surti** recordings (7, all M4A) have since been added, and Phases 1 to 3 and this analysis were re-run. **Every number, table and figure below now covers all five accents (35 recordings).** The earlier four-accent findings are kept and compared with the new ones: wherever something is new or has changed it is marked **[NEW – Surti]** or **[CHANGED]**, and the section [What Changed After Adding Surti](#what-changed-after-adding-surti) summarises it. The last four-accent version is in the git history (commit `644befb`). The analysis methods and screening rules were **not** changed; one clearly labelled **sensitivity analysis** was added (Section 9.5) because the Surti recordings exposed a limit of the speech detector.
 
-> **One sentence to remember:** we have only **one speaker per accent** (for Surti this is a folder convention, not a verified fact), so every difference between the accent groups could come from the *accent*, the *person*, the *microphone/app*, the *room*, the *file format*, or the *words used*. We cannot tell which. This is **exploratory analysis, not proof that the accents can be told apart.**
+> **One sentence to remember:** we have only **one speaker per accent**, so every difference between the accent groups could come from the *accent*, the *person*, the *microphone/app*, the *room*, the *file format*, or the *words used*. We cannot tell which. This is **exploratory analysis, not proof that the accents can be told apart.**
 
 ---
 
@@ -99,11 +99,11 @@ We wanted to find out:
 | Kutchi | Kutch | 7 | 1 (`KUT_S01`) | M4A | 10,558 |
 | Mehsani | North Gujarat | 7 | 1 (`MEH_S01`) | OGG | 9,948 |
 | Kathiyawadi | Saurashtra | 7 | 1 (`KAT_S01`) | OGG | 8,006 |
-| Surti **[NEW]** | South Gujarat | 7 | 1 (`SUR_S01`, by convention) | M4A | 6,537 |
+| Surti **[NEW]** | South Gujarat | 7 | 1 (`SUR_S01`) | M4A | 6,537 |
 
 - **35 recordings**, **44,664 frames**, **78 recording-level features** each (13 coefficients × MFCC/delta/delta-delta × mean/standard deviation).
 - All 35 recordings are used, **including the 11 flagged in Phase 2** (10 with minor clipping, 1 quieter Kutchi file). None of the Surti recordings is flagged. Nothing was removed, repaired or normalised.
-- **Surti:** seven files (`surti-01-GAC.m4a` to `surti-07-GAC.m4a`), 8.3 to 10.8 s each, 44.1 kHz M4A created on 2026-11-15. The other two M4A accents are 48 kHz and were created on 2026-11-09, so Surti was **recorded in a different session, probably with a different device or app**. **How many people recorded the Surti files is not documented**; `SUR_S01` follows the one-speaker-per-folder convention and is not a verified identity.
+- **Surti:** seven files (`surti-01-GAC.m4a` to `surti-07-GAC.m4a`), 8.3 to 10.8 s each, 44.1 kHz M4A created on 2026-11-15. The other two M4A accents are 48 kHz and were created on 2026-11-09, so Surti was **recorded in a different session, probably with a different device or app**. **All seven Surti recordings belong to one speaker (`SUR_S01`), confirmed by the dataset collector.**
 - The analysis finds accent names and formats **from the data**, so Surti appeared in every table and figure automatically once Phases 1 to 3 were re-run.
 - Speakers were allowed to change the prompt sentences to match their regional wording, so recordings do not contain exactly the same words.
 
@@ -622,7 +622,7 @@ These are mainly overall-level (MFCC 1), and variability (standard deviation) fe
 
 ## 13. Limitations and Potential Biases
 
-1. **One speaker per accent.** Accent, speaker, device, room and vocabulary cannot be separated. Large η² values are expected for any feature that differs between five different people. **[NEW]** For Surti even "one speaker" is unverified: the collection notes do not say how many people recorded the files.
+1. **One speaker per accent.** Accent, speaker, device, room and vocabulary cannot be separated. Large η² values are expected for any feature that differs between five different people. The dataset collector has confirmed that the seven Surti recordings are from one speaker, so this holds for all five accents.
 2. **Format and setup tied to accent.** M4A = Ahmedabad, Kutchi and Surti; OGG = Mehsani and Kathiyawadi. The within-format comparison is now three accents in M4A and two in OGG, but every accent still has its own noise and loudness profile, and Surti comes from a different session and probably a different device (44.1 kHz source against 48 kHz).
 3. **Seven recordings per speaker.** The recordings of one speaker are not independent of each other, so no significance testing was done and none would be valid.
 4. **Speech detection is a simple energy rule.** Very quiet speech may be treated as non-speech, noise may be treated as speech, and **[NEW] the rule fails completely for the noisy Surti recordings** (99% speech, almost no non-speech frames). About 30 features changed their η² by more than 0.15 when switching to speech frames, so the speech/non-speech boundary matters. The 20 dB sensitivity check is the only protection against this.
