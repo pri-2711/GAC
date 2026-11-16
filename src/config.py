@@ -48,8 +48,9 @@ ACCENTS: tuple[AccentConfig, ...] = (
     AccentConfig("Kutchi",      "Kutch",           "KUT_S01", "KUT", ("kutch", "kutchi")),
     AccentConfig("Mehsani",     "North Gujarat",   "MEH_S01", "MEH", ("mehsani",)),
     AccentConfig("Kathiyawadi", "Saurashtra",      "KAT_S01", "KAT", ("kathiyawadi",)),
-    # Pending data collection - no recordings yet. Dropping files into
-    # dataset/south-Gujarat/surti/ and rerunning the pipeline is enough.
+    # Added after the first four-accent analysis (7 recordings in dataset/south-Gujarat/surti/).
+    # NOTE: the Surti collection notes do not say how many people recorded the files; "SUR_S01"
+    # follows the one-speaker-per-accent-folder convention and is NOT a verified speaker identity.
     AccentConfig("Surti",       "South Gujarat",   "SUR_S01", "SUR", ("surti",)),
 )
 

@@ -2,7 +2,7 @@
 
 An audio-based machine-learning research project that investigates whether regional Gujarati speech accents can be recognised from voice recordings.
 
-> **Status:** research prototype. Phases 1 to 4 (data preparation, audio analysis, MFCC feature extraction, feature analysis) are **completed**. Model development has **not** started. The current dataset has **four accent classes and one speaker per accent**, so all findings so far are **preliminary and exploratory**.
+> **Status:** research prototype. Phases 1 to 4 (data preparation, audio analysis, MFCC feature extraction, feature analysis) are **completed** and have been **re-run on all five accents** after genuine Surti recordings were added. Model development has **not** started. The dataset has **five accent classes and one speaker per accent** (for Surti this is a folder convention, not a verified fact), so all findings so far are **preliminary and exploratory**.
 
 ---
 
@@ -28,7 +28,7 @@ An audio-based machine-learning research project that investigates whether regio
 
 The goal is to build an audio-based machine-learning system that identifies the **regional accent category** of a Gujarati speaker from a short voice recording.
 
-The current research prototype works with **four available accent categories** (Ahmedabad, Kutchi, Mehsani, Kathiyawadi). A fifth category, **Surti**, is planned and will be integrated when suitable genuine recordings become available. The code is written so that adding it does not require rewriting the pipeline (see [Future work](#13-future-work)).
+The research prototype works with **five accent categories** (Ahmedabad, Kutchi, Mehsani, Kathiyawadi and Surti). It started with four accents (28 recordings); **Surti** (7 recordings) was added later, and Phases 1 to 4 were re-run for all five. The code discovers accents from the data, so adding recordings or a new accent does not require rewriting the pipeline (see [Future work](#13-future-work)).
 
 ## 2. Problem statement
 
@@ -56,13 +56,13 @@ This project investigates whether **acoustic features extracted from audio** can
 | Kutchi | Kutch | 7 | 1 | M4A |
 | Mehsani | North Gujarat | 7 | 1 | OGG |
 | Kathiyawadi | Saurashtra | 7 | 1 | OGG |
-| Surti | South Gujarat | 0 currently available | Pending | Pending |
-| **Total** | | **28** | **4** | |
+| Surti | South Gujarat | 7 | 1 (by folder convention, unverified) | M4A |
+| **Total** | | **35** | **5** | |
 
-- The 28 recordings last 9.6 to 18.3 seconds each (about 6.4 minutes in total).
+- The 35 recordings last 8.3 to 18.3 seconds each (about 7.4 minutes in total).
 - All speakers were given common Gujarati sentence prompts but were allowed to adapt them to their own regional vocabulary and speaking style, so the recordings do not contain identical words. Nothing was translated, standardised or transcribed.
-- **Each current accent has only one speaker. This is a significant limitation.** The dataset must not be taken as representative of the entire regional population.
-- Surti recordings are not yet available. No synthetic, empty or substitute Surti data exists in the repository.
+- **Each accent has only one speaker. This is a significant limitation.** The dataset must not be taken as representative of the entire regional population.
+- **Surti:** the seven files (`surti-01-GAC.m4a` to `surti-07-GAC.m4a`) are 44.1 kHz M4A created on 2026-11-15, whereas the other two M4A accents are 48 kHz and were created on 2026-11-09, so Surti was recorded in a **different session, probably on a different device or app**. **The number of Surti speakers is not documented**: all seven files are grouped as `SUR_S01` by the one-speaker-per-folder convention, which is not a verified identity. No synthetic or substitute data was used.
 
 ## 5. Technology stack
 
@@ -109,7 +109,7 @@ flowchart LR
 | **6. Model development** | Train and compare classifiers with speaker-aware validation in mind. | **Planned** | – |
 | **7. Model evaluation** | Evaluate models honestly given the data limitations. | **Planned** | – |
 | **8. Prediction pipeline** | A reusable pipeline that takes a new recording and returns a predicted accent. | **Planned** | – |
-| **9. Fifth accent integration** | Add genuine Surti recordings and update the dataset, features, analysis and the model to five classes. | **Planned** | – |
+| **9. Fifth accent integration** | Add genuine Surti recordings and update the dataset, features, analysis and the model to five classes. | **Partly completed:** Surti data integrated and Phases 1 to 4 re-run. The five-class model update is planned. | Surti rows in all Phase 1-4 outputs; updated reports |
 
 ## 7. Repository structure
 
@@ -125,7 +125,7 @@ flowchart LR
 │   ├── kutch/                        Raw Kutchi recordings (M4A)
 │   ├── north-Gujarat/mehsani/        Raw Mehsani recordings (OGG)
 │   ├── saurashtra/kathiyawadi/       Raw Kathiyawadi recordings (OGG)
-│   ├── south-Gujarat/surti/          Empty: reserved for future Surti recordings
+│   ├── south-Gujarat/surti/          Raw Surti recordings (M4A)
 │   ├── recordings_metadata.csv       One row per recording (IDs, accent, region, paths, audio properties)
 │   └── processed/
 │       ├── wav/<Accent>/             Standardised WAV files (16 kHz, mono, PCM 16-bit)
@@ -168,40 +168,41 @@ flowchart LR
 Notes:
 - Each `src/` module is imported by the notebooks under the name shown (the notebooks add `src/` to the import path). The phase modules hold phase-specific logic; `config.py`, `common.py` and `plot_utils.py` hold what is shared.
 - `results/audio_analysis/audio_analysis_report.md` and `results/mfcc/README.md` are earlier copies of the Phase 2 and Phase 3 reports that were created next to the results. The reports in `reports/` are the canonical versions.
-- Git does not store empty folders, so after a fresh clone `dataset/south-Gujarat/surti/` will not exist until you create it.
 
 ## 8. Research findings so far
 
-> All findings are **preliminary and exploratory**. They describe these 28 recordings from four speakers, not Gujarati regional accents in general.
+> All findings are **preliminary and exploratory**. They describe these 35 recordings from five speakers, not Gujarati regional accents in general. Findings that **changed when Surti was added** are marked **[CHANGED]**; new Surti observations are marked **[NEW]**.
 
 **Phase 1 – audio standardisation**
-- All 28 recordings (14 M4A, 14 OGG) were converted and validated: 0 conversion failures and 0 validation failures. Every output is WAV, 16,000 Hz, mono, PCM 16-bit.
-- Surti: 0 recordings (pending). Originals were already 16 kHz mono, so conversion changed format and encoding only.
+- All 35 recordings (21 M4A, 14 OGG) were converted and validated: 0 conversion failures and 0 validation failures. Every output is WAV, 16,000 Hz, mono, PCM 16-bit. The 28 earlier recordings were not reconverted or changed.
+- The original recordings have different sample rates (all mono): Ahmedabad, Kutchi and Mehsani 48 kHz, Kathiyawadi 16 kHz, **Surti 44.1 kHz**. Phase 1 resampled all of them to 16 kHz. *(An earlier version of this README wrongly said the originals were already 16 kHz; this has been corrected.)*
 
 **Phase 2 – recording quality**
-- Recordings last 9.6 to 18.3 seconds; average durations are 13.7 s (Ahmedabad), 15.1 s (Kutchi), 14.2 s (Mehsani) and 11.4 s (Kathiyawadi).
-- 10 recordings (4 Mehsani, 6 Kathiyawadi) contain minor clipping (a very small share of samples at full scale); 1 Kutchi recording is about 6 dB quieter than the rest. None is empty, near-silent or an unusual length.
-- **The recording setup differs between the format groups:** the M4A recordings (Ahmedabad, Kutchi) have a median noise floor of about −47 dBFS, the OGG recordings (Mehsani, Kathiyawadi) about −78 dBFS, with digitally silent gaps in many of them.
+- Recordings last 8.3 to 18.3 seconds; average durations are 13.7 s (Ahmedabad), 15.1 s (Kutchi), 14.2 s (Mehsani), 11.4 s (Kathiyawadi) and **[NEW] 9.3 s (Surti, the shortest)**.
+- 10 recordings (4 Mehsani, 6 Kathiyawadi) contain minor clipping (a very small share of samples at full scale); 1 Kutchi recording is about 6 dB quieter than the rest. None is empty, near-silent or an unusual length. **The Surti recordings add no quality flags** and the earlier 28 recordings' measurements are unchanged.
+- **Every accent has its own recording setup.** Ahmedabad and Kutchi (M4A) have a noise floor of about −45 to −51 dBFS and the OGG recordings (Mehsani, Kathiyawadi) about −67 to −94 dBFS, with digitally silent gaps in many of them. **[CHANGED]** Surti, also M4A, is the noisiest of all (about −35 to −36 dBFS), so the noise level is **not** determined by the file format alone.
+- **[NEW] A limit of the speech detector was found:** because of Surti's high noise, the energy-based speech rule reports about 99% speech and no pauses for Surti. The waveform and spectrogram show pauses, and a stricter threshold gives a normal-looking 69%. The Surti speech/pause numbers are not comparable with the other accents'.
 
 **Phase 3 – MFCC extraction**
-- 28 of 28 recordings produced valid 13-coefficient MFCC, delta and delta-delta matrices (38,127 frames of 10 ms in total), with no NaN or infinite values and identical extraction parameters (`n_fft` 512, window 400, hop 160, Hann, DCT type 2, `ortho`).
-- The first coefficient (MFCC 1) mainly reflects overall energy.
+- 35 of 35 recordings produced valid 13-coefficient MFCC, delta and delta-delta matrices (44,664 frames of 10 ms in total), with no NaN or infinite values and identical extraction parameters (`n_fft` 512, window 400, hop 160, Hann, DCT type 2, `ortho`). The features of the 28 earlier recordings are **identical** to the four-accent run, and the feature schema is unchanged.
+- The first coefficient (MFCC 1) mainly reflects overall energy. **[CHANGED]** It is now highest for Surti (all seven recordings above every other recording), consistent with Surti's constant background noise.
 
 **Phase 4 – feature analysis**
-- **Silence and noise influence MFCC 1 and MFCC 2.** Whole-recording means of both rise with the share of speech frames (r = 0.69 and 0.70). With speech frames only (71.4% of all frames), the MFCC 2 link inside a speaker disappears and the MFCC 1 link changes sign.
-- **Recording format is a confound.** M4A and OGG recordings differ in several features, and two of them (MFCC 1 and MFCC 2 means) **reverse direction** once silence is excluded. Some features also differ between accents recorded in the *same* format, so format does not explain everything.
-- **Heavy overlap** remains for 8 of the 78 features (mostly delta and delta-delta means).
-- 49 of 78 features separate the four speakers strongly (η² ≥ 0.60 on speech frames). With one speaker per accent this is expected and **is not evidence that the accents can be told apart.**
-- 30 features passed every screening rule and are listed as candidates for follow-up with more speakers. No feature was removed or selected.
+- **Silence and noise influence MFCC 1 and MFCC 2.** Inside a speaker, whole-recording means of both rise with the share of speech frames (r = 0.46 and 0.41; unchanged by Surti). With speech frames only (75.5% of all frames), the MFCC 2 link disappears and the MFCC 1 link changes sign.
+- **Recording format is a confound, with details changed by Surti.** MFCC 2 mean still reverses direction once silence is excluded. **[CHANGED]** The earlier MFCC 1 reversal disappeared (M4A −390.3, OGG −390.3 on speech frames). Delta variability is low for all three M4A accents and high for both OGG accents, so that link got stronger. Some features also differ between accents recorded in the *same* format, so format does not explain everything.
+- **[NEW] Surti stands apart in 10 of 78 features** (all seven recordings outside the range of the 28 others), mainly overall-level and variability features such as MFCC 1 mean and standard deviation. This is what a noisier recording setup would produce; it does **not** show that Surti is acoustically distinct as an accent.
+- **The overall picture is mostly stable:** the accent η² values of the four-accent and five-accent runs correlate 0.96. **[CHANGED]** Details: MFCC 8 is now low for both Mehsani and Surti (it was unique to Mehsani); heavy overlap remains for 7 of the 78 features (8 before).
+- 51 of 78 features separate the five speakers strongly (η² ≥ 0.60 on speech frames; 49 before). With one speaker per accent this is expected and **is not evidence that the accents can be told apart.**
+- 35 features passed every screening rule and are listed as candidates for follow-up with more speakers (30 before; 7 were added, mostly Surti-driven energy features, and 2 dropped out). No feature was removed or selected.
 
 ## 9. Scientific limitations
 
-- **One speaker per current accent.** Accent, speaker identity, vocabulary, microphone and room are mixed together and cannot be separated with these data.
+- **One speaker per accent** (for Surti only by folder convention: the number of speakers is undocumented). Accent, speaker identity, vocabulary, microphone and room are mixed together and cannot be separated with these data.
 - **Possible speaker-identity confounding.** Any difference between classes may reflect a person rather than a regional accent.
-- **Different original formats and recording conditions.** Format (M4A or OGG) is tied to accent group, and the two groups differ in noise floor, loudness and silence handling.
-- **Limited sample size.** 28 recordings, 7 per speaker, which are not independent of each other. No significance tests were run, and none would be valid.
+- **Different original formats and recording conditions.** M4A covers three accents and OGG two, but every accent still has its own recording setup (noise floor, loudness, silence handling, source sample rate). Surti was recorded in a different session, probably on a different device.
+- **Limited sample size.** 35 recordings, 7 per speaker, which are not independent of each other. No significance tests were run, and none would be valid.
 - **No speaker-independent generalisation has been demonstrated.** Any classifier trained on these data must be evaluated with this in mind.
-- **Surti is not yet included**, so the current dataset is a four-class dataset.
+- **The speech/non-speech split fails for the noisy Surti recordings** (see Phase 2 and 4 findings), so the Surti "speech-only" features are not comparable with the others under the standard 30 dB rule; a stricter-threshold sensitivity check is provided.
 - Silence and pauses were deliberately kept in the whole-recording features; speech-only versions exist for comparison.
 
 ## 10. Installation and setup
@@ -281,12 +282,12 @@ The reports are written in simple language, with embedded figures and tables, an
 - **Phase 6 – Model development.** Train and compare classifiers using only the acoustic columns listed in `mfcc_feature_columns.json`. Keep the candidate features from Phase 4 as a starting point, not a final feature set.
 - **Phase 7 – Model evaluation.** Evaluate honestly. With one speaker per accent, scores on held-out recordings of the *same* speakers do not show accent recognition.
 - **Phase 8 – Prediction pipeline.** A reusable pipeline: new recording → standardised WAV → features → predicted accent.
-- **Phase 9 – Fifth accent (Surti).** The accent mapping already contains Surti (`src/config.py`), and the analysis code discovers accents from the data instead of assuming four classes. When genuine Surti recordings are available:
-  1. put them in `dataset/south-Gujarat/surti/` (create the folder after a fresh clone);
-  2. re-run Phase 1, then Phases 2, 3 and 4 (`python scripts/run_phase1.py`, then `python scripts/run_notebooks.py --only 2 3 4`), so that metadata, quality metrics, features and analyses are all updated **consistently** with the same extraction parameters and feature schema;
-  3. re-run `python scripts/validate_project.py`;
-  4. retrain and re-evaluate the model for five classes.
+- **Phase 9 – Fifth accent (Surti).** **Partly completed.** The seven Surti recordings were added, and Phases 1 to 4 were re-run with the same extraction parameters and feature schema, so the metadata, quality metrics, features and analyses are consistent across all five accents. What remains is the five-class model update, once models exist. The same procedure works for further recordings or accents:
+  1. put new recordings in the folder of their accent (a new accent needs one entry in `src/config.py`);
+  2. re-run Phase 1, then Phases 2, 3 and 4 (`python scripts/run_phase1.py`, then `python scripts/run_notebooks.py --only 2 3 4`);
+  3. re-run `python scripts/validate_project.py` (it fails if a raw recording has not been processed);
+  4. refresh the written reports, which contain numbers from the current dataset.
 
-  The written reports contain numbers from the four-class dataset, so they must be refreshed after Surti is added. Never use another accent's recordings or synthetic audio as a substitute.
+  Never use another accent's recordings or synthetic audio as a substitute.
 
 Ideally, future data collection should also add **more speakers per accent**, recorded on the **same device and format**, because that is what the current limitations call for.

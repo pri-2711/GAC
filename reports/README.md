@@ -8,3 +8,5 @@ Beginner-friendly visual analysis reports for each phase of the Gujarati Accent 
 | 3 – MFCC extraction | [mfcc_extraction_report.md](mfcc_extraction_report.md) | `notebooks/03_mfcc_extraction.ipynb`, `results/mfcc/` |
 | 4 – Feature analysis and comparison | [feature_analysis_report.md](feature_analysis_report.md) | `notebooks/04_feature_analysis.ipynb`, `results/feature_analysis/` |
 | Maintenance - code audit and cleanup after Phase 4 | [project_cleanup_audit.md](project_cleanup_audit.md) | `src/`, `scripts/`, `README.md` |
+
+**Surti update.** The Phase 2, 3 and 4 reports were updated after genuine Surti recordings were added: they now cover **five accents and 35 recordings**. The original four-accent findings are kept; anything new is marked **[NEW – Surti]** and anything that changed is marked **[CHANGED]**, and each report starts with a "What Changed After Adding Surti" section. The last four-accent versions are in the git history (commit `644befb`).

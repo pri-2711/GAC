@@ -54,11 +54,15 @@ def frame_energy(y: np.ndarray) -> np.ndarray:
     return 20 * np.log10(np.maximum(rms, 1e-10))
 
 
-def speech_activity(y: np.ndarray, sr: int) -> dict:
-    """Energy-based activity analysis. Nothing is removed from the signal."""
+def speech_activity(y: np.ndarray, sr: int, speech_db_below_ref: float = SPEECH_DB_BELOW_REF) -> dict:
+    """Energy-based activity analysis. Nothing is removed from the signal.
+
+    `speech_db_below_ref` is the Phase 2 rule (default 30 dB). Other values are used only for the
+    Phase 4 sensitivity analysis; the default keeps all earlier results unchanged.
+    """
     db = frame_energy(y)
     ref = np.percentile(db, 99)
-    speech = db >= ref - SPEECH_DB_BELOW_REF
+    speech = db >= ref - speech_db_below_ref
     silence = db < ref - SILENCE_DB_BELOW_REF
     quiet = ~speech & ~silence
     frame_s = HOP_LENGTH / sr

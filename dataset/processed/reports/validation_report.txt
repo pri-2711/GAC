@@ -1,6 +1,6 @@
 === Phase 1 validation report ===
-Total files discovered      : 28
-Successfully converted      : 28
+Total files discovered      : 35
+Successfully converted      : 35
 Failed conversions          : 0 
 Validation failures         : 0 
 Files in unmapped folders   : 0 
@@ -10,6 +10,6 @@ Valid recordings per accent:
   Kutchi      : 7
   Mehsani     : 7
   Kathiyawadi : 7
-  Surti       : 0 (pending future collection)
+  Surti       : 7
 
-Total validated: 28
+Total validated: 35

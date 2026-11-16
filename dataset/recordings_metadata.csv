@@ -27,3 +27,10 @@ KAT_S01_R04,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathi
 KAT_S01_R05,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathiyawadi-05-GAC.ogg,dataset/processed/wav/Kathiyawadi/kathiyawadi-05-GAC.wav,OGG,12.114,16000,1,PCM_16,success
 KAT_S01_R06,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathiyawadi-06-GAC.ogg,dataset/processed/wav/Kathiyawadi/kathiyawadi-06-GAC.wav,OGG,10.873,16000,1,PCM_16,success
 KAT_S01_R07,KAT_S01,Kathiyawadi,Saurashtra,,dataset/saurashtra/kathiyawadi/kathiyawadi-07-GAC.ogg,dataset/processed/wav/Kathiyawadi/kathiyawadi-07-GAC.wav,OGG,15.194,16000,1,PCM_16,success
+SUR_S01_R01,SUR_S01,Surti,South Gujarat,,dataset/south-Gujarat/surti/surti-01-GAC.m4a,dataset/processed/wav/Surti/surti-01-GAC.wav,M4A,10.797,16000,1,PCM_16,success
+SUR_S01_R02,SUR_S01,Surti,South Gujarat,,dataset/south-Gujarat/surti/surti-02-GAC.m4a,dataset/processed/wav/Surti/surti-02-GAC.wav,M4A,8.29,16000,1,PCM_16,success
+SUR_S01_R03,SUR_S01,Surti,South Gujarat,,dataset/south-Gujarat/surti/surti-03-GAC.m4a,dataset/processed/wav/Surti/surti-03-GAC.wav,M4A,8.847,16000,1,PCM_16,success
+SUR_S01_R04,SUR_S01,Surti,South Gujarat,,dataset/south-Gujarat/surti/surti-04-GAC.m4a,dataset/processed/wav/Surti/surti-04-GAC.wav,M4A,8.336,16000,1,PCM_16,success
+SUR_S01_R05,SUR_S01,Surti,South Gujarat,,dataset/south-Gujarat/surti/surti-05-GAC.m4a,dataset/processed/wav/Surti/surti-05-GAC.wav,M4A,10.495,16000,1,PCM_16,success
+SUR_S01_R06,SUR_S01,Surti,South Gujarat,,dataset/south-Gujarat/surti/surti-06-GAC.m4a,dataset/processed/wav/Surti/surti-06-GAC.wav,M4A,8.475,16000,1,PCM_16,success
+SUR_S01_R07,SUR_S01,Surti,South Gujarat,,dataset/south-Gujarat/surti/surti-07-GAC.m4a,dataset/processed/wav/Surti/surti-07-GAC.wav,M4A,10.101,16000,1,PCM_16,success

@@ -168,3 +168,43 @@ No file under `dataset/` and no data file under `results/` changed. Nothing was 
 7. **No automated unit tests** beyond the validations. `scripts/validate_project.py` is the project's test entry point; real unit tests for the statistics (eta-squared, correlations) would be a good addition before Phase 6.
 8. The notebooks' stored outputs are large (notebook 02 is about 3.5 MB, notebook 04 about 4 MB). Clearing outputs before commits would reduce the repository size if that becomes a concern.
 9. Git reports a line-ending warning for `src/feature_plots.py` (LF will become CRLF). A `.gitattributes` file would make line endings consistent across machines.
+
+---
+
+## F. Surti integration (five-accent update)
+
+Genuine Surti recordings were added after the cleanup above. This section records how they were integrated and what was found.
+
+### F.1 What was inspected first
+- `dataset/south-Gujarat/surti/` held **7 files**, all M4A, named `surti-01-GAC.m4a` … `surti-07-GAC.m4a` (the same pattern as the other accents). The count was not assumed; it was read from disk.
+- Probed with FFmpeg: AAC-LC, mono, **44.1 kHz**, ~128 kb/s, 8.3–10.8 s, embedded creation time **2026-11-15**. The Ahmedabad and Kutchi M4A files are 48 kHz, created 2026-11-09. So Surti comes from a **different session and probably a different device or app**.
+- Mapping: `config.py` already contained Surti (`surti` folder, prefix `SUR`, region South Gujarat). File names map to `SUR_S01_R01` … `R07` with the existing rule (number taken from the file name). No file was renamed or modified.
+- **Not documented, so not assumed:** how many people recorded the files. `SUR_S01` follows the one-speaker-per-folder convention and is flagged as **unverified** in `config.py`, the READMEs and all reports.
+
+### F.2 What was run
+- **Phase 1:** 7 files converted, 28 skipped as already valid. 35 of 35 outputs validated (16 kHz, mono, PCM_16). The 28 existing metadata rows are identical; no raw recording or earlier processed WAV changed (SHA-256 compared).
+- **Phases 2–4:** re-run on all 35 recordings with unchanged methods and parameters. The 28 earlier recordings' Phase 3 table rows and NPZ arrays are **identical** to the four-accent run; the feature schema file is unchanged. Phase 2 metrics of the earlier recordings are unchanged except `level_dev_db`, which moved by at most 0.4 dB because the median moved; no flag changed.
+- All four notebooks executed without errors; Phase 3 reports 11/11 checks and Phase 4 26/26 checks.
+
+### F.3 Code and notebook changes
+| File | Change |
+|---|---|
+| `src/audio_analysis.py` | `speech_activity` accepts an optional `speech_db_below_ref` (default unchanged, 30 dB) so Phase 4 can run a threshold sensitivity check. Default behaviour verified identical. |
+| `src/feature_analysis.py` | New `masks_at_threshold()` (re-uses the verified frame alignment). |
+| `src/config.py` | Updated the stale "pending data collection" comment for Surti; documents that the speaker identity is unverified. |
+| `scripts/validate_project.py` | New checks: every raw recording on disk is in the metadata (so a forgotten Phase 1 re-run is caught) and no raw audio sits in an unmapped folder; the new Phase 4 output files are expected. |
+| `notebooks/01–04` | Static text updated (no more "Surti pending", "28 recordings", four-accent observations); counts in titles made dynamic; notebooks 02 and 03 now use the shared palette (`plot_utils`) so Surti has the same colour in every phase (existing accents keep their exact colours). Notebook 04 gained section D2 (threshold sensitivity). |
+| Reports and READMEs | The Phase 2, 3 and 4 reports and both READMEs were updated; each report starts with a "What Changed After Adding Surti" section. The copies under `results/` are kept in sync with `reports/`. |
+
+### F.4 Problems found and corrected during the integration
+1. **Wrong statement in the README (mine, introduced earlier):** "originals were already 16 kHz mono". The originals are 48 kHz (Ahmedabad, Kutchi, Mehsani), 16 kHz (Kathiyawadi) and 44.1 kHz (Surti); all are mono. I had read the *processed* metadata columns. Corrected in the README and the Phase 2 report.
+2. **Hard-coded count in a figure title:** notebook 03's heatmap title said "all 28 recordings" and would have shown 35 under that title. Now dynamic, and the figure was regenerated.
+3. **A limit of the Phase 2 speech detector.** For Surti the 30 dB rule counts 99% of frames as speech with no pauses, because Surti's background noise (−35 to −36 dBFS) is within 30 dB of its speech. The waveform and spectrogram show pauses, and a 20 dB rule gives 69% (the others 55–62%). The established 30 dB rule was **not** changed; a labelled sensitivity analysis was added and the limitation is stated in the reports. Consequences also reported: Surti's "speech-only" features are practically the whole-recording features, and Surti has only 3–16 non-speech frames per recording, so the non-speech MFCC 1 analysis is unreliable for it.
+4. **A wrong explanation in my own draft of the Phase 4 report** (why two features dropped off the candidate list) was caught by checking the data and corrected: they stopped being "stable after speech-only"; their accent η² had not fallen.
+
+### F.5 Validation
+`python scripts/validate_project.py`: **69 checks passed, 0 failed**, 237 Markdown links checked. Also confirmed: 35 recordings, 5 accents × 7, no duplicate IDs; all 35 WAVs valid; 35 NPZ files and 35 feature rows with no NaN or infinite values; every figure embedded in the reports exists and every figure is referenced.
+
+### F.6 Remaining concerns
+- **Surti's speaker count is unknown**, and the recording session/device differs from the other accents. Any feature that makes Surti look special may be a setup effect (the features where Surti stands apart are mostly level- and variability-related).
+- The notebooks (and `results/audio_analysis/image.png`, see E.1) are unchanged in that respect: the stray screenshot is still there.

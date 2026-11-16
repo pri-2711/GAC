@@ -258,6 +258,23 @@ def summarise_frames(frames: np.ndarray, mask: np.ndarray, groups=mf.FEATURE_GRO
     return row
 
 
+def masks_at_threshold(meta: pd.DataFrame, speech: dict, speech_db_below_ref: float,
+                       min_speech_frames: int = 20) -> dict:
+    """Speech masks recomputed with a different energy threshold (sensitivity analysis only).
+
+    Re-uses the frame correspondence verified in compute_speech_frames (same detector, same frame
+    grid) and returns a dict with the same structure, so speech_only_table() accepts it.
+    """
+    paths = meta.set_index("recording_id")["processed_file_path"]
+    out = {}
+    for rid, info in speech.items():
+        y, sr = aa.load_audio(cfg.PROJECT_ROOT / paths[rid])
+        mask = np.asarray(aa.speech_activity(y, sr, speech_db_below_ref=speech_db_below_ref)["speech_mask"], bool)
+        assert len(mask) == info["n_frames"], f"{rid}: mask/MFCC frame count differ"
+        out[rid] = {**info, "mask": mask, "aligned": bool(info["aligned"] and mask.sum() >= min_speech_frames)}
+    return out
+
+
 def shift_sensitivity(speech: dict, shift_frames: int = 1) -> pd.DataFrame:
     """How much do speech-only means change if the mask is shifted by +/- shift_frames?
 

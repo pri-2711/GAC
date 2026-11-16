@@ -14,8 +14,8 @@ Extraction parameters:
   center      : True
   delta_width : 9
 
-Recordings in metadata : 28
-Recordings processed   : 28
+Recordings in metadata : 35
+Recordings processed   : 35
 Extraction errors      : 0
 
 Recordings per accent:
@@ -23,15 +23,15 @@ Recordings per accent:
   Kutchi      : 7
   Mehsani     : 7
   Kathiyawadi : 7
-  Surti       : 0  (pending future collection)
+  Surti       : 7
 
-Frames per recording   : min 960, max 1826, total 38127
+Frames per recording   : min 829, max 1826, total 44664
 Features per recording : 13 coefficients x (MFCC, delta, delta-delta) x (mean, std) = 78
 Recordings with Phase 2 quality flags kept: 11
 
 Validation checks:
   [PASS] No extraction errors
-  [PASS] All metadata recordings processed  -> metadata=28, processed=28
+  [PASS] All metadata recordings processed  -> metadata=35, processed=35
   [PASS] Feature table has one row per recording, IDs match metadata
   [PASS] Every recording has 13 coefficients; MFCC/delta/delta-delta shapes agree with frame count
   [PASS] No NaN or infinite values in any frame-level matrix

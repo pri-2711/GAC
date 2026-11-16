@@ -65,6 +65,12 @@ record("metadata CSV loads and has rows", len(meta) > 0, f"{len(meta)} recording
 record("recording IDs are unique", meta.recording_id.is_unique)
 record("every accent in the metadata is configured", set(meta.accent) <= set(cfg.configured_accents()),
        f"found: {sorted(set(meta.accent))}")
+discovered, unmapped_raw = au.discover_recordings()
+unprocessed = sorted(r.recording_id for r in discovered if r.recording_id not in set(meta.recording_id))
+record("every raw recording on disk has been processed by Phase 1 (none is missing from the metadata)", not unprocessed,
+       f"not in metadata (re-run Phase 1): {unprocessed}" if unprocessed else f"{len(discovered)} raw recordings, all in the metadata")
+record("no raw audio file sits in a folder that matches no configured accent", not unmapped_raw,
+       f"unmapped files: {[p.name for p in unmapped_raw]}" if unmapped_raw else "")
 missing = [p for p in meta.processed_file_path if not (ROOT / p).is_file()]
 record("every processed WAV in the metadata exists", not missing, f"missing: {missing}" if missing else "")
 raw_missing = [p for p in meta.original_file_path if not (ROOT / p).is_file()]
@@ -107,7 +113,7 @@ for name, ok, detail in data["checks"]:
     record(f"[feature_analysis.load_inputs] {name}", ok, detail if not ok else "")
 expected = ["feature_analysis_summary.csv", "feature_correlations.csv", "accent_feature_statistics.csv",
             "format_comparison.csv", "speech_only_recording_features.csv", "quality_correlations.csv",
-            "validation_summary.txt"]
+            "speech_threshold_sensitivity.csv", "speech_only_recording_features_ref20.csv", "validation_summary.txt"]
 record("Phase 4 output files present", all((cfg.FEATURE_ANALYSIS_DIR / f).is_file() for f in expected))
 summary_txt = (cfg.FEATURE_ANALYSIS_DIR / "validation_summary.txt").read_text(encoding="utf-8")
 record("Phase 4 validation_summary.txt reports ALL CHECKS PASSED", "ALL CHECKS PASSED" in summary_txt)
