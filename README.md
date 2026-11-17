@@ -80,6 +80,7 @@ Everything listed here is used in the repository (see `requirements.txt` for the
 | **Matplotlib** | All figures (waveforms, spectrograms, heatmaps, distributions, correlation plots). |
 | **TensorFlow / Keras** (`tensorflow`, `keras`) | Phase 6: builds and trains the neural networks (CNN, MLP and the dual-branch fusion network) from scratch on the CPU. |
 | **scikit-learn** | Phase 6: the SVM baseline and the evaluation metrics (precision, recall, F1, confusion matrices). |
+| **Streamlit** | Phase 7: the web application (`app.py`) for uploading a recording and viewing the prediction. |
 | **Jupyter** (`ipykernel`, `nbformat`, `nbclient`) | The four phase notebooks, and `scripts/run_notebooks.py`, which runs them headlessly. |
 | **Git** | Version control. |
 
@@ -96,9 +97,10 @@ flowchart LR
     P3 --> P4
     P4 --> P5[Phase 5<br/>PCA]
     P5 --> P6[Phase 6<br/>Model development]
-    P6 --> P7[Phase 7<br/>Evaluation - planned]
-    P7 --> P8[Phase 8<br/>Prediction pipeline - planned]
-    P8 --> P9[Phase 9<br/>Fifth accent Surti - planned]
+    P6 --> P7[Phase 7<br/>Web application]
+    P7 --> P8[Phase 8<br/>Model evaluation - planned]
+    P8 --> P9[Phase 9<br/>Packaging - planned]
+    P9 --> P10[Phase 10<br/>Fifth accent model update - planned]
 ```
 
 | Phase | Purpose | Status | Important outputs |
@@ -109,9 +111,10 @@ flowchart LR
 | **4. Feature analysis and comparison** | Examine which features overlap between accents and whether differences are influenced by silence, noise, original format or recording quality. Build speech-only versions of the features. | Completed | `results/feature_analysis/` (summary CSVs, speech-only features, 26 figures) |
 | **5. Dimensionality reduction (PCA)** | Explore the structure of the 78 features with PCA (exploratory only, not a classifier): variance, loadings, accent- and recording-condition patterns, Surti investigation, sensitivity analyses. | Completed | `results/pca/` (scores, variance, loadings, scaler+PCA model, figures), [`reports/pca_report.md`](reports/pca_report.md), `scripts/run_phase5.py` |
 | **6. Model development** | A custom dual-branch CNN–MLP feature-fusion network with hierarchical region/accent heads, trained from scratch, compared with an SVM, an MLP and a CNN under one 7-fold protocol; a final model and an inference pipeline. **Within-speaker, exploratory evaluation only.** | Completed | `results/model_development/`, [`reports/model_development_report.md`](reports/model_development_report.md), `reports/figures/phase6_hierarchical_model_architecture.png`, `scripts/run_phase6.py`, `scripts/predict_accent.py` |
-| **7. Model evaluation** | Evaluate models honestly given the data limitations. | **Planned** | – |
-| **8. Prediction pipeline** | A reusable pipeline that takes a new recording and returns a predicted accent. | **Planned** | – |
-| **9. Fifth accent integration** | Add genuine Surti recordings and update the dataset, features, analysis and the model to five classes. | **Partly completed:** Surti data integrated and Phases 1 to 4 re-run. The five-class model update is planned. | Surti rows in all Phase 1-4 outputs; updated reports |
+| **7. Web application (frontend)** | A Streamlit app: upload a recording (WAV, MP3, M4A, OGG), listen to it, see its waveform, and get the region and accent predicted by the real final MLP, with the two heads' output scores and clear experimental warnings. Reuses the existing inference pipeline. | Completed | `app.py`, `src/frontend_utils.py`, `scripts/test_frontend.py`, `results/frontend/`, [`reports/frontend_implementation_report.md`](reports/frontend_implementation_report.md) |
+| **8. Model evaluation** | Evaluate models honestly given the data limitations (speaker-independent evaluation once more speakers exist). *(Planned as "Phase 7" in the Phase 6 report; renumbered because the frontend was built first.)* | **Planned** | – |
+| **9. Packaging of the prediction pipeline** | The command-line script and the web app already exist; remaining work is packaging and deployment. | **Partly completed** (`scripts/predict_accent.py`, `app.py`) | – |
+| **10. Fifth accent integration (model update)** | Surti data are integrated and Phases 1 to 6 include them; this step would revisit the models once more speakers are available. | **Partly completed:** Surti data integrated and Phases 1 to 6 re-run on five classes. | Surti recordings, five-class results |
 
 ## 7. Repository structure
 
@@ -145,6 +148,7 @@ flowchart LR
 │   ├── model_dev.py              Phase 6: Keras models, training, SVM baseline, evaluation, hierarchical inference
 │   ├── model_checks.py           Phase 6: validation checks and inference examples
 │   ├── model_plots.py            Phase 6 figures incl. the architecture diagram
+│   ├── frontend_utils.py         Phase 7: upload validation and the call into the real inference pipeline
 │   ├── pca_plots.py              Phase 5 figure functions
 │   ├── plot_utils.py             Shared plotting helpers (palette, style, saving)
 │   └── feature_plots.py          Phase 4 figure functions
@@ -154,6 +158,7 @@ flowchart LR
 │   ├── run_phase5.py             Run Phase 5 (PCA) and write results/pca/
 │   ├── run_phase6.py             Run Phase 6 (prepare / train / finalize / evaluate)
 │   ├── predict_accent.py         Predict region and accent of a new recording (final model)
+│   ├── test_frontend.py          Phase 7 frontend tests (real model, real files)
 │   ├── diagnose_cnn_batchnorm.py Phase 6 diagnostic (inference only)
 │   ├── run_notebooks.py          Run the phase notebooks headlessly
 │   └── validate_project.py       Run every project validation in one place
@@ -169,7 +174,8 @@ flowchart LR
 │   ├── mfcc/                     Phase 3: frame_features/ (NPZ), CSV tables, figures/
 │   ├── feature_analysis/         Phase 4: CSV tables, figures/
 │   ├── pca/                      Phase 5: scores, variance, loadings, model, tables, figures/
-│   └── model_development/        Phase 6: spectrograms, per-experiment folders, final_model/, hierarchical_inference/, evaluation/
+│   ├── model_development/        Phase 6: spectrograms, per-experiment folders, final_model/, hierarchical_inference/, evaluation/
+│   └── frontend/                 Phase 7: frontend test results
 │
 └── reports/                     Human-readable research reports
     ├── README.md                 Index of the reports
@@ -178,6 +184,7 @@ flowchart LR
     ├── feature_analysis_report.md
     ├── pca_report.md
     ├── model_development_report.md
+    ├── frontend_implementation_report.md
     ├── figures/                  Phase 6 architecture diagram
     └── project_cleanup_audit.md  Code audit and cleanup record
 ```
@@ -275,6 +282,19 @@ python scripts/run_phase1.py                # add --force to reconvert everythin
 python scripts/run_phase5.py                # writes results/pca/ and runs its 40 validation checks
 ```
 
+**Run the web application (Phase 7)**
+
+```bash
+pip install -r requirements.txt     # once (includes Streamlit, TensorFlow and FFmpeg support)
+streamlit run app.py                # then open http://localhost:8501
+```
+
+*Using it:* open **🎧 Classify audio**, drag in or browse for a recording (WAV, MP3, M4A or OGG, 1 to 180 s, ideally 8 to 18 s of clear speech), play it back, check the waveform, press **Classify accent**, and read the predicted accent, its region and the output scores of the region and accent heads. Other pages: **Home** (the five accents and regions), **About the model** (the 78 features, the MLP and its two heads) and **Dataset & limitations**.
+
+*Features:* upload validation (file type, empty file, undecodable file, too short, silent, too long, with clear messages), playback, waveform, loading indicator, region and accent prediction by the real final MLP, output-score charts, hierarchical-decision explanation, and a permanent warning that the model is experimental. Uploaded audio is standardised (FFmpeg, 16 kHz mono) and classified by the same code as `scripts/predict_accent.py`; nothing is re-implemented in the app, and the model is never retrained or changed.
+
+*Known limitations:* the model has seen only 35 recordings of 5 speakers (one speaker per accent), so it cannot separate an accent from a voice and is **not validated on unseen speakers**; a new speaker is simply matched to the most similar of the five known voices. The bar charts are raw softmax scores, not calibrated probabilities (they are usually close to 0% or 100%). Each region has one accent, so distinguishing accents *within* a region is not demonstrated. Tests (`python scripts/test_frontend.py`) cover the processing and every page's rendering but not clicking through the upload widget in a browser; see the frontend report.
+
 **Run Phase 6 (model development)** (needs Phases 1–4; resumable; the full training takes many CPU-hours because the CNN-based runs are slow):
 
 ```bash
@@ -318,6 +338,7 @@ Loading the features for your own experiments: read `results/mfcc/mfcc_feature_c
 | [`reports/feature_analysis_report.md`](reports/feature_analysis_report.md) | Phase 4: feature analysis and comparison |
 | [`reports/pca_report.md`](reports/pca_report.md) | Phase 5: PCA and dimensionality reduction |
 | [`reports/model_development_report.md`](reports/model_development_report.md) | Phase 6: dual-branch CNN–MLP hierarchical model, experiments and model decision |
+| [`reports/frontend_implementation_report.md`](reports/frontend_implementation_report.md) | Phase 7: Streamlit web application, integration, tests and limitations |
 | [`reports/project_cleanup_audit.md`](reports/project_cleanup_audit.md) | Code audit and cleanup record after Phase 4 |
 
 The reports are written in simple language, with embedded figures and tables, and can be read without opening the notebooks.
@@ -326,9 +347,10 @@ The reports are written in simple language, with embedded figures and tables, an
 
 - ~~Phase 5 – Dimensionality reduction (PCA)~~ **completed** (see the findings below and [`reports/pca_report.md`](reports/pca_report.md)).
 - ~~Phase 6 – Model development~~ **completed** (within-speaker, exploratory; see [`reports/model_development_report.md`](reports/model_development_report.md)). Open points: speaker-independent evaluation, multi-accent regions, repeated seeds, a BatchNorm fix for the CNN-based runs.
-- **Phase 7 – Model evaluation.** Evaluate honestly. With one speaker per accent, scores on held-out recordings of the *same* speakers do not show accent recognition.
-- **Phase 8 – Prediction pipeline.** A reusable pipeline: new recording → standardised WAV → features → predicted accent.
-- **Phase 9 – Fifth accent (Surti).** **Partly completed.** The seven Surti recordings were added, and Phases 1 to 4 were re-run with the same extraction parameters and feature schema, so the metadata, quality metrics, features and analyses are consistent across all five accents. What remains is the five-class model update, once models exist. The same procedure works for further recordings or accents:
+- ~~Phase 7 – Web application~~ **completed** (see [`reports/frontend_implementation_report.md`](reports/frontend_implementation_report.md)).
+- **Phase 8 – Model evaluation.** Evaluate honestly. With one speaker per accent, scores on held-out recordings of the *same* speakers do not show accent recognition. (Called "Phase 7" in the Phase 6 report.)
+- **Phase 9 – Packaging.** The prediction pipeline exists as a script and a web app; packaging and deployment remain.
+- **Phase 10 – Fifth accent (Surti).** **Partly completed.** The seven Surti recordings were added, and Phases 1 to 4 were re-run with the same extraction parameters and feature schema, so the metadata, quality metrics, features and analyses are consistent across all five accents. What remains is the five-class model update, once models exist. The same procedure works for further recordings or accents:
   1. put new recordings in the folder of their accent (a new accent needs one entry in `src/config.py`);
   2. re-run Phase 1, then Phases 2, 3 and 4 (`python scripts/run_phase1.py`, then `python scripts/run_notebooks.py --only 2 3 4`);
   3. re-run `python scripts/validate_project.py` (it fails if a raw recording has not been processed);

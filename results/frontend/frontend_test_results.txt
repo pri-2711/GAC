@@ -1,0 +1,31 @@
+Phase 7 frontend tests (executed by scripts/test_frontend.py)
+============================================================
+[PASS] Valid WAV: accepted and classified -> Central Gujarat / Ahmedabad, 14.2 s
+[PASS] Result region equals the region mapped to the predicted accent
+[PASS] Both heads return valid probabilities (finite, in [0,1], sum to 1)
+[PASS] Result lists exactly the model's accents and regions
+[PASS] Frontend result == scripts/predict_accent.py result (same file, separate process) -> max probability difference 0.00e+00
+[PASS] Frontend result == stored Phase 6 final-model prediction for the same recording
+[PASS] Valid M4A upload: decoded, standardised and classified -> Ahmedabad (14.2 s, 48000 Hz source)
+[PASS] M4A upload gives the same decision as the project's own prediction for that recording -> true Ahmedabad, predicted Ahmedabad
+[PASS] Valid OGG upload: decoded, standardised and classified -> Mehsani (18.3 s, 48000 Hz source)
+[PASS] OGG upload gives the same decision as the project's own prediction for that recording -> true Mehsani, predicted Mehsani
+[PASS] Valid MP3 upload (re-encoded from a project WAV) classified -> Ahmedabad
+[PASS] 44.1 kHz stereo WAV is standardised to 16 kHz mono and classified -> duration 14.2 s, original 44100 Hz
+[PASS] 8 kHz mono WAV is standardised to 16 kHz mono and classified -> duration 14.2 s, original 8000 Hz
+[PASS] Unsupported extension (.txt) is rejected with a clear message -> message: “.txt” is not a supported file type. Please upload one of: WAV, MP3, M4A, OGG.
+[PASS] Empty file (0 bytes) is rejected -> message: The uploaded file is empty (0 bytes). Please choose a valid recording.
+[PASS] Text file renamed to .wav is rejected gracefully (no crash) -> message: The file could not be decoded as audio. It may be corrupted, empty, or not really a WAV file. (Decoder message
+[PASS] Corrupted M4A (random bytes) is rejected gracefully -> message: The file could not be decoded as audio. It may be corrupted, empty, or not really a M4A file. (Decoder message
+[PASS] Valid WAV header with zero samples ('empty audio') is rejected -> message: No audio samples were found in this file.
+[PASS] Very short audio (0.3 s) is rejected -> message: The recording is too short (0.30 s). Please upload at least 1 second of speech (the model was trained on recor
+[PASS] Digital silence (10 s) is rejected -> message: The recording is silent (no audible signal). Please upload a recording that contains speech.
+[PASS] Over-long audio (190 s) is rejected -> message: The recording is too long (190 s). Please upload at most 180 seconds.
+[PASS] Near-silent noise is accepted with a 'very quiet' warning (not a crash) -> warnings: ['The recording is very quiet (RMS -80 dBFS) and may be mostly silence or noise.']
+[PASS] Short but valid audio (3 s) is accepted with a warning
+[PASS] App page renders without exception: 🏠 Home
+[PASS] App page renders without exception: 🎧 Classify audio
+[PASS] App page renders without exception: 🧠 About the model
+[PASS] App page renders without exception: 📊 Dataset & limitations
+
+27/27 tests passed

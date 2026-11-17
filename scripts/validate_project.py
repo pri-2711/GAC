@@ -43,7 +43,7 @@ def record(name: str, ok, detail: str = "") -> None:
 section("1. Imports")
 MODULES = ["config", "common", "plot_utils", "audio_utils", "audio_analysis",
            "mfcc_features", "feature_analysis", "feature_plots", "pca_analysis", "pca_plots",
-           "model_data", "model_dev", "model_plots", "model_checks"]
+           "model_data", "model_dev", "model_plots", "model_checks", "frontend_utils"]
 for m in MODULES:
     try:
         importlib.import_module(m)
@@ -184,6 +184,38 @@ if rep6.is_file():
     record("report embeds the architecture diagram by relative path", "](figures/phase6_hierarchical_model_architecture.png)" in txt6)
     used6 = set(re.findall(r"\]\(\.\./results/model_development/([^)]+\.png)\)", txt6))
     record("every Phase 6 figure referenced in the report exists", all((M6 / u).is_file() for u in used6), f"{len(used6)} figures referenced")
+
+# --------------------------------------------------------------------------- #
+section("5d. Phase 7 - Streamlit frontend (static checks and recorded test results)")
+import ast
+import frontend_utils as fut
+
+app_py = ROOT / "app.py"
+record("app.py exists and is valid Python", app_py.is_file() and bool(ast.parse(app_py.read_text(encoding="utf-8"))))
+record("app.py reuses the project's inference pipeline (no own feature extraction)",
+       app_py.is_file() and "frontend_utils" in app_py.read_text(encoding="utf-8")
+       and not any(tok in app_py.read_text(encoding="utf-8") for tok in ("librosa", "extract_frame_features", "keras.models.load_model")))
+record("final model bundle used by the app exists", (fut.BUNDLE_DIR / "model.keras").is_file() and (fut.BUNDLE_DIR / "preprocessing.npz").is_file() and (fut.BUNDLE_DIR / "labels.json").is_file())
+import model_dev as _mdl
+record("AccentPredictor exposes load_audio and predict_audio (used by the app)", hasattr(_mdl.AccentPredictor, "load_audio") and hasattr(_mdl.AccentPredictor, "predict_audio"))
+for label, fname, blob, needle in (("empty file", "x.wav", b"", "empty"), ("unsupported type", "x.txt", b"abc", "not a supported")):
+    try:
+        fut.prepare_upload(fname, blob, None)
+        record(f"frontend rejects {label} with a clear message", False, "no error raised")
+    except fut.AudioProblem as exc:
+        record(f"frontend rejects {label} with a clear message", needle in str(exc).lower(), str(exc)[:70])
+ft = ROOT / "results" / "frontend" / "frontend_test_results.txt"
+record("recorded frontend test results exist", ft.is_file())
+if ft.is_file():
+    last = ft.read_text(encoding="utf-8").strip().splitlines()[-1]
+    record("recorded frontend tests: all passed", last.split()[0].split("/")[0] == last.split()[0].split("/")[1], last)
+rep7 = ROOT / "reports" / "frontend_implementation_report.md"
+record("reports/frontend_implementation_report.md exists", rep7.is_file())
+if rep7.is_file():
+    t7 = rep7.read_text(encoding="utf-8")
+    record("frontend report documents tests performed and not performed, and the launch command",
+           "Tests actually performed" in t7 and "Tests not performed" in t7 and "streamlit run app.py" in t7)
+record("root README documents the launch command", "streamlit run app.py" in (ROOT / "README.md").read_text(encoding="utf-8"))
 
 # --------------------------------------------------------------------------- #
 section("6. Notebooks (stored outputs)")

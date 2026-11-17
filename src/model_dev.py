@@ -18,6 +18,7 @@ from pathlib import Path
 import librosa
 import numpy as np
 import pandas as pd
+import soundfile as sf
 
 import os
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
@@ -189,15 +190,27 @@ class AccentPredictor:
         self.model = keras.models.load_model(self.dir / "model.keras", compile=False)
         self.kind = self.labels["kind"]
 
-    def _audio(self, path: Path):
+    def load_audio(self, path):
+        """Standardise any audio file exactly like Phase 1 and return (signal, 16000).
+
+        Files that are already 16 kHz mono WAV are read as they are; everything else (M4A, OGG, MP3, or a WAV with another
+        sample rate / channel count) is converted with the Phase 1 FFmpeg step (16 kHz, mono, PCM-16, no other processing).
+        """
         path = Path(path)
-        if path.suffix.lower() != ".wav":                     # same standardisation as Phase 1 (FFmpeg -> 16 kHz mono WAV)
-            tmp = Path(tempfile.mkdtemp()) / (path.stem + ".wav")
-            ok, msg = au.convert_to_wav(path, tmp)
-            if not ok:
-                raise RuntimeError(f"conversion failed: {msg}")
-            path = tmp
-        return aa.load_audio(path)
+        if path.suffix.lower() == ".wav":
+            try:
+                info = sf.info(str(path))
+                if info.samplerate == cfg.TARGET_SAMPLE_RATE and info.channels == cfg.TARGET_CHANNELS:
+                    return aa.load_audio(path)
+            except Exception:                                    # unreadable header: let FFmpeg decide below
+                pass
+        tmp = Path(tempfile.mkdtemp()) / (path.stem + ".wav")
+        ok, msg = au.convert_to_wav(path, tmp)
+        if not ok:
+            raise RuntimeError(f"conversion failed: {msg}")
+        return aa.load_audio(tmp)
+
+    _audio = load_audio                                          # backwards-compatible name used by predict_file / checks
 
     def inputs_from_audio(self, y, sr) -> dict:
         x = {}
@@ -213,7 +226,11 @@ class AccentPredictor:
         return x
 
     def predict_file(self, path) -> dict:
-        y, sr = self._audio(path)
+        y, sr = self.load_audio(path)
+        return self.predict_audio(y, sr)
+
+    def predict_audio(self, y, sr) -> dict:
+        """Run the network on an already standardised signal (16 kHz mono) and decide hierarchically."""
         out = self.model.predict(self.inputs_from_audio(y, sr), verbose=0)
         pr, pa = out["region_output"][0], out["accent_output"][0]
         res = hierarchical_decode(pr, pa, self.labels["maps"])[0]
