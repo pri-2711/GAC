@@ -1,0 +1,10 @@
+run,experiment,label,status,folds_finished,folds_started,n_folds_planned
+svm_baseline,A,A: SVM (78 MFCC features),complete,7,0,7
+cnn_only,B,B: CNN only (Log-Mel),complete,7,7,7
+mlp_only,C,C: MLP only (78 features),complete,7,7,7
+fusion_model,D,D: Dual-branch fusion (proposed),complete,7,7,7
+mlp_only_extra,C-supp,"C (suppl.): MLP, 78 + 13 additional features",INCOMPLETE / not run,0,1,7
+mlp_only_noaug,C-supp,"C (suppl.): MLP, no augmentation",INCOMPLETE / not run,0,0,7
+fusion_noaug,D-supp,"D (suppl., post-hoc): fusion, patience 25, no augmentation",complete,7,7,7
+fusion_patience25,D-supp,"D (suppl., post-hoc): fusion, patience 25",complete,7,7,7
+cnn_only_patience25,B-supp,"B (suppl., post-hoc): CNN, patience 25",complete,7,7,7

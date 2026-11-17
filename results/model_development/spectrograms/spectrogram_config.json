@@ -1,0 +1,24 @@
+{
+  "sample_rate": 16000,
+  "n_mels": 64,
+  "n_fft": 512,
+  "win_length": 400,
+  "hop_length": 160,
+  "window": "hann",
+  "power": 2.0,
+  "fmin": 0.0,
+  "fmax": 8000.0,
+  "center": true,
+  "to_db": "librosa.power_to_db(ref=1.0, top_db=80.0)",
+  "ref": 1.0,
+  "top_db": 80.0,
+  "model_input_frames_T": 800,
+  "model_input_shape": [
+    64,
+    800,
+    1
+  ],
+  "window_note": "25 ms Hann window (400 samples) zero-padded to an FFT of 512, hop 160 samples (10 ms)",
+  "padding_cropping": "recordings longer than T are cropped (centre crop for evaluation, random crop for training); shorter ones are padded at the end with the training mean (0 after normalisation)",
+  "normalisation": "per-Mel-band mean/std fitted on the TRAINING fold only"
+}

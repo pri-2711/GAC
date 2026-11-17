@@ -1,0 +1,8 @@
+fold,epochs_run,best_epoch,n_params_trainable,n_params_total,weights_changed_fraction,all_trainable_tensors_updated,checkpoint_matches_restored_weights,final_lr
+1,29,4,127626,128202,1.0,True,True,1.5625000742147677e-05
+2,115,90,127626,128202,1.0,True,True,6.103515914901436e-08
+3,29,4,127626,128202,1.0,True,True,1.5625000742147677e-05
+4,29,4,127626,128202,1.0,True,True,1.5625000742147677e-05
+5,29,4,127626,128202,1.0,True,True,1.5625000742147677e-05
+6,136,111,127626,128202,1.0,True,True,1.907348723406699e-09
+7,94,69,127626,128202,1.0,True,True,4.882812731921149e-07

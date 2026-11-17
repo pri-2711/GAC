@@ -1,0 +1,11 @@
+layer,type,output_shape,trainable_params,non_trainable_params
+features,InputLayer,"(None, 78)",0,0
+mlp_dense_64,Dense,"(None, 64)",5056,0
+mlp_bn,BatchNormalization,"(None, 64)",128,128
+mlp_dropout_1,Dropout,"(None, 64)",0,0
+mlp_dense_32,Dense,"(None, 32)",2080,0
+mlp_dropout_2,Dropout,"(None, 32)",0,0
+shared_dense_64,Dense,"(None, 64)",2112,0
+shared_dropout,Dropout,"(None, 64)",0,0
+accent_output,Dense,"(None, 5)",325,0
+region_output,Dense,"(None, 5)",325,0

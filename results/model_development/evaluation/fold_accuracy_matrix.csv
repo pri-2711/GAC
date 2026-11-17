@@ -1,0 +1,8 @@
+,1,2,3,4,5,6,7
+A: SVM (78 MFCC features),1.0,1.0,1.0,1.0,1.0,1.0,1.0
+B: CNN only (Log-Mel),0.6,0.4,0.4,0.2,0.4,0.4,0.6
+C: MLP only (78 features),1.0,1.0,1.0,1.0,1.0,1.0,1.0
+D: Dual-branch fusion (proposed),0.6,1.0,1.0,0.8,0.6,1.0,1.0
+"D (suppl., post-hoc): fusion, patience 25, no augmentation",0.6,1.0,0.6,0.8,0.4,1.0,1.0
+"D (suppl., post-hoc): fusion, patience 25",1.0,1.0,1.0,1.0,1.0,1.0,1.0
+"B (suppl., post-hoc): CNN, patience 25",0.6,0.4,0.4,0.2,0.4,0.4,1.0

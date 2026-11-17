@@ -1,0 +1,44 @@
+
+  [PASS] All recordings represented: Phase 1 metadata == Phase 3 table == spectrogram store -> 35 recordings
+  [PASS] Every recording has a label for both heads
+  [PASS] Model input columns == Phase 3 schema (78, unchanged, no metadata) -> 78 columns
+  [PASS] No NaN/inf in the 78 features
+  [PASS] Additional features stored separately, valid and finite -> 13 columns
+  [PASS] Every spectrogram has 64 Mel bands and finite values
+  [PASS] Spectrogram frame counts equal the Phase 3 MFCC frame counts (same 25 ms / 10 ms framing)
+  [PASS] Spectrogram config on disk equals the code (64 mels, 400 window, 160 hop, Hann, T=800)
+  [PASS] Model-ready spectrogram batch has the consistent shape (batch, 64, 800) -> (35, 64, 800)
+  [PASS] Padding path produces exactly T frames for a too-short input -> 0 recordings need padding
+  [PASS] No pretrained model, weights, hub or embedding references in the Phase 6 code -> hits: []
+  [PASS] Weights are freshly random: same seed -> identical init, different seed -> different init, kernels non-constant
+  [PASS] All trainable weight tensors changed during training (every fold of every neural run) -> 6 runs, 42 fold models
+  [PASS] Best checkpoint on disk reproduces the restored best weights (every fold)
+  [PASS] Every layer output shape matches the specified architecture -> 19 layers checked; mismatches: {}
+  [PASS] Trainable parameter count equals the independent hand calculation -> 127,626
+  [PASS] All three Conv2D layers use use_bias=False, padding='same', 3x3 kernels
+  [PASS] Dropout rates are 0.40 / 0.30 / 0.20 / 0.40 -> {'mlp_dropout_1': 0.3, 'cnn_dropout': 0.4, 'mlp_dropout_2': 0.2, 'shared_dropout': 0.4}
+  [PASS] Both heads output valid probabilities (finite, in [0,1], rows sum to 1) in every saved prediction -> 6 runs
+  [PASS] Hierarchical decoding follows the region -> accent mapping in every prediction
+  [PASS] Decoder supports several accents in one region (synthetic mapping): picks the best accent inside the predicted region -> {'region': 'A', 'accent': 'a2'}
+  [PASS] Folds: every recording is tested exactly once
+  [PASS] Folds: train, validation and test recordings are disjoint in every fold
+  [PASS] Folds on disk equal the folds regenerated from the seed
+  [PASS] Every fold's test set holds one recording per accent (stratified)
+  [PASS] Augmentation reads only the TRAINING recordings of its fold (one full epoch inspected) -> 25 recordings touched, all in the training set
+  [PASS] Every trained fold used exactly the planned train/val/test recordings
+  [PASS] Saved normalisation equals one re-fitted on the training recordings only (and differs from an all-data fit) -> deep: every fold
+  [PASS] Saved checkpoints reload (.keras) and reproduce the stored test probabilities -> 42 fold models reloaded
+  [PASS] SVM label-shuffle control stays near chance (pipeline does not leak labels) -> mean test accuracy with shuffled training labels 0.218 (chance 0.200, 50 shuffles)
+  [PASS] Architecture diagram, training curves, confusion matrices and comparison plots exist -> missing: []
+  [PASS] Reusable predictor examples cover every recording and agree with the batch predictions (<= 1e-4)
+  [PASS] Final (selected) model trained, documented as having no test set and no accuracy claim
+  [PASS] Final model reloads and the inference pipeline returns valid, mapping-consistent probabilities for a new file -> Central Gujarat / Ahmedabad
+  [PASS] scripts/predict_accent.py (command-line inference) exists
+  [PASS] Every run that has predictions.csv finished all folds (no incomplete run is reported as complete) -> []
+  [PASS] Run status table written (complete vs incomplete runs)
+37/37 checks passed
+                            name  pooled_accent_accuracy  macro_f1  fold_mean  fold_sd
+       A: SVM (78 MFCC features)                   1.000     1.000      1.000    0.000
+           B: CNN only (Log-Mel)                   0.429     0.321      0.429    0.138
+       C: MLP only (78 features)                   1.000     1.000      1.000    0.000
+D: Dual-branch fusion (proposed)                   0.857     0.852      0.857    0.190

@@ -1,0 +1,246 @@
+fold,split,recording_id,true_region,true_accent,pred_accent_head,pred_accent_hier,pred_region
+1,train,AHM_S01_R01,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+1,train,AHM_S01_R03,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+1,train,AHM_S01_R05,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+1,train,AHM_S01_R06,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+1,train,AHM_S01_R07,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+1,train,KUT_S01_R02,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+1,train,KUT_S01_R03,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+1,train,KUT_S01_R04,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+1,train,KUT_S01_R06,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+1,train,KUT_S01_R07,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+1,train,MEH_S01_R02,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+1,train,MEH_S01_R03,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+1,train,MEH_S01_R04,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+1,train,MEH_S01_R05,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+1,train,MEH_S01_R06,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+1,train,KAT_S01_R02,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+1,train,KAT_S01_R03,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+1,train,KAT_S01_R04,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+1,train,KAT_S01_R05,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+1,train,KAT_S01_R07,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+1,train,SUR_S01_R01,South Gujarat,Surti,Surti,Surti,South Gujarat
+1,train,SUR_S01_R03,South Gujarat,Surti,Surti,Surti,South Gujarat
+1,train,SUR_S01_R04,South Gujarat,Surti,Surti,Surti,South Gujarat
+1,train,SUR_S01_R05,South Gujarat,Surti,Surti,Surti,South Gujarat
+1,train,SUR_S01_R07,South Gujarat,Surti,Surti,Surti,South Gujarat
+1,val,AHM_S01_R02,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+1,val,KUT_S01_R05,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+1,val,MEH_S01_R01,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+1,val,KAT_S01_R06,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+1,val,SUR_S01_R06,South Gujarat,Surti,Surti,Surti,South Gujarat
+1,test,AHM_S01_R04,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+1,test,KAT_S01_R01,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+1,test,KUT_S01_R01,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+1,test,MEH_S01_R07,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+1,test,SUR_S01_R02,South Gujarat,Surti,Surti,Surti,South Gujarat
+2,train,AHM_S01_R01,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+2,train,AHM_S01_R02,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+2,train,AHM_S01_R05,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+2,train,AHM_S01_R06,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+2,train,AHM_S01_R07,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+2,train,KUT_S01_R02,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+2,train,KUT_S01_R04,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+2,train,KUT_S01_R05,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+2,train,KUT_S01_R06,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+2,train,KUT_S01_R07,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+2,train,MEH_S01_R01,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+2,train,MEH_S01_R03,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+2,train,MEH_S01_R04,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+2,train,MEH_S01_R05,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+2,train,MEH_S01_R06,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+2,train,KAT_S01_R01,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+2,train,KAT_S01_R02,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+2,train,KAT_S01_R04,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+2,train,KAT_S01_R05,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+2,train,KAT_S01_R07,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+2,train,SUR_S01_R02,South Gujarat,Surti,Surti,Surti,South Gujarat
+2,train,SUR_S01_R03,South Gujarat,Surti,Surti,Surti,South Gujarat
+2,train,SUR_S01_R04,South Gujarat,Surti,Surti,Surti,South Gujarat
+2,train,SUR_S01_R05,South Gujarat,Surti,Surti,Surti,South Gujarat
+2,train,SUR_S01_R06,South Gujarat,Surti,Surti,Surti,South Gujarat
+2,val,AHM_S01_R04,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+2,val,KUT_S01_R01,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+2,val,MEH_S01_R07,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+2,val,KAT_S01_R03,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+2,val,SUR_S01_R07,South Gujarat,Surti,Surti,Surti,South Gujarat
+2,test,AHM_S01_R03,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+2,test,KAT_S01_R06,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+2,test,KUT_S01_R03,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+2,test,MEH_S01_R02,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+2,test,SUR_S01_R01,South Gujarat,Surti,Surti,Surti,South Gujarat
+3,train,AHM_S01_R01,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+3,train,AHM_S01_R02,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+3,train,AHM_S01_R03,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+3,train,AHM_S01_R04,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+3,train,AHM_S01_R06,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+3,train,KUT_S01_R01,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+3,train,KUT_S01_R02,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+3,train,KUT_S01_R03,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+3,train,KUT_S01_R04,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+3,train,KUT_S01_R06,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+3,train,MEH_S01_R01,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+3,train,MEH_S01_R02,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+3,train,MEH_S01_R03,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+3,train,MEH_S01_R04,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+3,train,MEH_S01_R07,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+3,train,KAT_S01_R01,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+3,train,KAT_S01_R03,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+3,train,KAT_S01_R04,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+3,train,KAT_S01_R06,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+3,train,KAT_S01_R07,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+3,train,SUR_S01_R01,South Gujarat,Surti,Surti,Surti,South Gujarat
+3,train,SUR_S01_R02,South Gujarat,Surti,Surti,Surti,South Gujarat
+3,train,SUR_S01_R04,South Gujarat,Surti,Surti,Surti,South Gujarat
+3,train,SUR_S01_R06,South Gujarat,Surti,Surti,Surti,South Gujarat
+3,train,SUR_S01_R07,South Gujarat,Surti,Surti,Surti,South Gujarat
+3,val,AHM_S01_R05,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+3,val,KUT_S01_R05,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+3,val,MEH_S01_R06,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+3,val,KAT_S01_R02,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+3,val,SUR_S01_R03,South Gujarat,Surti,Surti,Surti,South Gujarat
+3,test,AHM_S01_R07,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+3,test,KAT_S01_R05,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+3,test,KUT_S01_R07,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+3,test,MEH_S01_R05,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+3,test,SUR_S01_R05,South Gujarat,Surti,Surti,Surti,South Gujarat
+4,train,AHM_S01_R01,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+4,train,AHM_S01_R02,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+4,train,AHM_S01_R04,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+4,train,AHM_S01_R06,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+4,train,AHM_S01_R07,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+4,train,KUT_S01_R01,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+4,train,KUT_S01_R03,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+4,train,KUT_S01_R05,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+4,train,KUT_S01_R06,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+4,train,KUT_S01_R07,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+4,train,MEH_S01_R02,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+4,train,MEH_S01_R04,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+4,train,MEH_S01_R05,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+4,train,MEH_S01_R06,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+4,train,MEH_S01_R07,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+4,train,KAT_S01_R01,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+4,train,KAT_S01_R02,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+4,train,KAT_S01_R04,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+4,train,KAT_S01_R06,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+4,train,KAT_S01_R07,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+4,train,SUR_S01_R02,South Gujarat,Surti,Surti,Surti,South Gujarat
+4,train,SUR_S01_R03,South Gujarat,Surti,Surti,Surti,South Gujarat
+4,train,SUR_S01_R05,South Gujarat,Surti,Surti,Surti,South Gujarat
+4,train,SUR_S01_R06,South Gujarat,Surti,Surti,Surti,South Gujarat
+4,train,SUR_S01_R07,South Gujarat,Surti,Surti,Surti,South Gujarat
+4,val,AHM_S01_R03,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+4,val,KUT_S01_R04,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+4,val,MEH_S01_R01,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+4,val,KAT_S01_R05,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+4,val,SUR_S01_R01,South Gujarat,Surti,Surti,Surti,South Gujarat
+4,test,AHM_S01_R05,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+4,test,KAT_S01_R03,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+4,test,KUT_S01_R02,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+4,test,MEH_S01_R03,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+4,test,SUR_S01_R04,South Gujarat,Surti,Surti,Surti,South Gujarat
+5,train,AHM_S01_R01,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+5,train,AHM_S01_R03,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+5,train,AHM_S01_R04,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+5,train,AHM_S01_R05,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+5,train,AHM_S01_R07,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+5,train,KUT_S01_R01,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+5,train,KUT_S01_R02,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+5,train,KUT_S01_R03,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+5,train,KUT_S01_R04,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+5,train,KUT_S01_R07,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+5,train,MEH_S01_R01,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+5,train,MEH_S01_R02,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+5,train,MEH_S01_R03,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+5,train,MEH_S01_R04,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+5,train,MEH_S01_R05,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+5,train,KAT_S01_R01,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+5,train,KAT_S01_R02,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+5,train,KAT_S01_R03,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+5,train,KAT_S01_R04,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+5,train,KAT_S01_R06,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+5,train,SUR_S01_R01,South Gujarat,Surti,Surti,Surti,South Gujarat
+5,train,SUR_S01_R02,South Gujarat,Surti,Surti,Surti,South Gujarat
+5,train,SUR_S01_R04,South Gujarat,Surti,Surti,Surti,South Gujarat
+5,train,SUR_S01_R05,South Gujarat,Surti,Surti,Surti,South Gujarat
+5,train,SUR_S01_R07,South Gujarat,Surti,Surti,Surti,South Gujarat
+5,val,AHM_S01_R06,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+5,val,KUT_S01_R06,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+5,val,MEH_S01_R07,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+5,val,KAT_S01_R05,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+5,val,SUR_S01_R03,South Gujarat,Surti,Surti,Surti,South Gujarat
+5,test,AHM_S01_R02,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+5,test,KAT_S01_R07,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+5,test,KUT_S01_R05,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+5,test,MEH_S01_R06,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+5,test,SUR_S01_R06,South Gujarat,Surti,Surti,Surti,South Gujarat
+6,train,AHM_S01_R01,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+6,train,AHM_S01_R02,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+6,train,AHM_S01_R03,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+6,train,AHM_S01_R04,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+6,train,AHM_S01_R05,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+6,train,KUT_S01_R01,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+6,train,KUT_S01_R02,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+6,train,KUT_S01_R05,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+6,train,KUT_S01_R06,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+6,train,KUT_S01_R07,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+6,train,MEH_S01_R01,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+6,train,MEH_S01_R03,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+6,train,MEH_S01_R05,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+6,train,MEH_S01_R06,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+6,train,MEH_S01_R07,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+6,train,KAT_S01_R01,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+6,train,KAT_S01_R02,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+6,train,KAT_S01_R03,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+6,train,KAT_S01_R05,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+6,train,KAT_S01_R06,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+6,train,SUR_S01_R01,South Gujarat,Surti,Surti,Surti,South Gujarat
+6,train,SUR_S01_R02,South Gujarat,Surti,Surti,Surti,South Gujarat
+6,train,SUR_S01_R04,South Gujarat,Surti,Surti,Surti,South Gujarat
+6,train,SUR_S01_R05,South Gujarat,Surti,Surti,Surti,South Gujarat
+6,train,SUR_S01_R06,South Gujarat,Surti,Surti,Surti,South Gujarat
+6,val,AHM_S01_R07,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+6,val,KUT_S01_R03,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+6,val,MEH_S01_R02,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+6,val,KAT_S01_R07,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+6,val,SUR_S01_R03,South Gujarat,Surti,Surti,Surti,South Gujarat
+6,test,AHM_S01_R06,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+6,test,KAT_S01_R04,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+6,test,KUT_S01_R04,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+6,test,MEH_S01_R04,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+6,test,SUR_S01_R07,South Gujarat,Surti,Surti,Surti,South Gujarat
+7,train,AHM_S01_R03,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+7,train,AHM_S01_R04,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+7,train,AHM_S01_R05,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+7,train,AHM_S01_R06,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+7,train,AHM_S01_R07,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+7,train,KUT_S01_R01,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+7,train,KUT_S01_R02,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+7,train,KUT_S01_R04,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+7,train,KUT_S01_R05,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+7,train,KUT_S01_R07,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+7,train,MEH_S01_R02,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+7,train,MEH_S01_R03,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+7,train,MEH_S01_R04,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+7,train,MEH_S01_R05,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+7,train,MEH_S01_R07,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+7,train,KAT_S01_R01,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+7,train,KAT_S01_R04,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+7,train,KAT_S01_R05,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+7,train,KAT_S01_R06,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+7,train,KAT_S01_R07,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+7,train,SUR_S01_R01,South Gujarat,Surti,Surti,Surti,South Gujarat
+7,train,SUR_S01_R02,South Gujarat,Surti,Surti,Surti,South Gujarat
+7,train,SUR_S01_R05,South Gujarat,Surti,Surti,Surti,South Gujarat
+7,train,SUR_S01_R06,South Gujarat,Surti,Surti,Surti,South Gujarat
+7,train,SUR_S01_R07,South Gujarat,Surti,Surti,Surti,South Gujarat
+7,val,AHM_S01_R02,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+7,val,KUT_S01_R03,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+7,val,MEH_S01_R06,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+7,val,KAT_S01_R03,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+7,val,SUR_S01_R04,South Gujarat,Surti,Surti,Surti,South Gujarat
+7,test,AHM_S01_R01,Central Gujarat,Ahmedabad,Ahmedabad,Ahmedabad,Central Gujarat
+7,test,KAT_S01_R02,Saurashtra,Kathiyawadi,Kathiyawadi,Kathiyawadi,Saurashtra
+7,test,KUT_S01_R06,Kutch,Kutchi,Kutchi,Kutchi,Kutch
+7,test,MEH_S01_R01,North Gujarat,Mehsani,Mehsani,Mehsani,North Gujarat
+7,test,SUR_S01_R03,South Gujarat,Surti,Surti,Surti,South Gujarat

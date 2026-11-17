@@ -1,0 +1,40 @@
+{
+  "accents": [
+    "Ahmedabad",
+    "Kutchi",
+    "Mehsani",
+    "Kathiyawadi",
+    "Surti"
+  ],
+  "regions": [
+    "Central Gujarat",
+    "Kutch",
+    "North Gujarat",
+    "Saurashtra",
+    "South Gujarat"
+  ],
+  "accent_to_region": {
+    "Ahmedabad": "Central Gujarat",
+    "Kutchi": "Kutch",
+    "Mehsani": "North Gujarat",
+    "Kathiyawadi": "Saurashtra",
+    "Surti": "South Gujarat"
+  },
+  "region_to_accents": {
+    "Central Gujarat": [
+      "Ahmedabad"
+    ],
+    "Kutch": [
+      "Kutchi"
+    ],
+    "North Gujarat": [
+      "Mehsani"
+    ],
+    "Saurashtra": [
+      "Kathiyawadi"
+    ],
+    "South Gujarat": [
+      "Surti"
+    ]
+  }
+}

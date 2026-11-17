@@ -1,0 +1,8 @@
+fold,train_accent_accuracy,val_accent_accuracy,test_accent_accuracy,epochs_run,best_epoch
+1,0.68,0.6,0.6,16,6
+2,1.0,1.0,1.0,83,73
+3,1.0,1.0,1.0,100,100
+4,0.8,0.6,0.8,17,7
+5,0.64,0.6,0.6,19,9
+6,1.0,1.0,1.0,86,76
+7,1.0,1.0,1.0,65,55

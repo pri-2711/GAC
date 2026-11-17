@@ -1,0 +1,39 @@
+recording_id,model,source,fold_model,true_region,true_accent,predicted_region,predicted_accent,region_confidence,accent_confidence_within_region,accent_head_probability,joint_confidence,region_correct,accent_correct
+AHM_S01_R01,mlp_only: fold model that did NOT see this recording,processed_wav,7,Central Gujarat,Ahmedabad,Central Gujarat,Ahmedabad,0.9999889135360718,1.0,0.9999847412109375,0.9999889135360718,True,True
+AHM_S01_R01,mlp_only: fold model that did NOT see this recording,original_file,7,Central Gujarat,Ahmedabad,Central Gujarat,Ahmedabad,0.9999889135360718,1.0,0.9999847412109375,0.9999889135360718,True,True
+AHM_S01_R02,mlp_only: fold model that did NOT see this recording,processed_wav,5,Central Gujarat,Ahmedabad,Central Gujarat,Ahmedabad,0.9999954700469971,1.0,0.9999996423721313,0.9999954700469971,True,True
+AHM_S01_R03,mlp_only: fold model that did NOT see this recording,processed_wav,2,Central Gujarat,Ahmedabad,Central Gujarat,Ahmedabad,0.9999994039535522,1.0,0.9999991655349731,0.9999994039535522,True,True
+AHM_S01_R04,mlp_only: fold model that did NOT see this recording,processed_wav,1,Central Gujarat,Ahmedabad,Central Gujarat,Ahmedabad,0.9999998807907104,1.0,0.9999998807907104,0.9999998807907104,True,True
+AHM_S01_R05,mlp_only: fold model that did NOT see this recording,processed_wav,4,Central Gujarat,Ahmedabad,Central Gujarat,Ahmedabad,0.9999616146087646,1.0,0.9999817609786987,0.9999616146087646,True,True
+AHM_S01_R06,mlp_only: fold model that did NOT see this recording,processed_wav,6,Central Gujarat,Ahmedabad,Central Gujarat,Ahmedabad,0.9999725818634033,1.0,0.9999762773513794,0.9999725818634033,True,True
+AHM_S01_R07,mlp_only: fold model that did NOT see this recording,processed_wav,3,Central Gujarat,Ahmedabad,Central Gujarat,Ahmedabad,0.9998695850372314,1.0,0.999648928642273,0.9998695850372314,True,True
+KUT_S01_R01,mlp_only: fold model that did NOT see this recording,processed_wav,1,Kutch,Kutchi,Kutch,Kutchi,0.9999980926513672,1.0,0.9999997615814209,0.9999980926513672,True,True
+KUT_S01_R01,mlp_only: fold model that did NOT see this recording,original_file,1,Kutch,Kutchi,Kutch,Kutchi,0.9999980926513672,1.0,0.9999997615814209,0.9999980926513672,True,True
+KUT_S01_R02,mlp_only: fold model that did NOT see this recording,processed_wav,4,Kutch,Kutchi,Kutch,Kutchi,0.9999998807907104,1.0,1.0,0.9999998807907104,True,True
+KUT_S01_R03,mlp_only: fold model that did NOT see this recording,processed_wav,2,Kutch,Kutchi,Kutch,Kutchi,0.9999712705612183,1.0,0.9999804496765137,0.9999712705612183,True,True
+KUT_S01_R04,mlp_only: fold model that did NOT see this recording,processed_wav,6,Kutch,Kutchi,Kutch,Kutchi,0.9950630068778992,1.0,0.9973402619361877,0.9950630068778992,True,True
+KUT_S01_R05,mlp_only: fold model that did NOT see this recording,processed_wav,5,Kutch,Kutchi,Kutch,Kutchi,0.9999977350234985,1.0,0.9999997615814209,0.9999977350234985,True,True
+KUT_S01_R06,mlp_only: fold model that did NOT see this recording,processed_wav,7,Kutch,Kutchi,Kutch,Kutchi,0.9999936819076538,1.0,0.9999687671661377,0.9999936819076538,True,True
+KUT_S01_R07,mlp_only: fold model that did NOT see this recording,processed_wav,3,Kutch,Kutchi,Kutch,Kutchi,0.9999550580978394,1.0,0.9999468326568604,0.9999550580978394,True,True
+MEH_S01_R01,mlp_only: fold model that did NOT see this recording,processed_wav,7,North Gujarat,Mehsani,North Gujarat,Mehsani,0.9999469518661499,1.0,0.999930739402771,0.9999469518661499,True,True
+MEH_S01_R01,mlp_only: fold model that did NOT see this recording,original_file,7,North Gujarat,Mehsani,North Gujarat,Mehsani,0.9999469518661499,1.0,0.999930739402771,0.9999469518661499,True,True
+MEH_S01_R02,mlp_only: fold model that did NOT see this recording,processed_wav,2,North Gujarat,Mehsani,North Gujarat,Mehsani,0.9999929666519165,1.0,0.9999935626983643,0.9999929666519165,True,True
+MEH_S01_R03,mlp_only: fold model that did NOT see this recording,processed_wav,4,North Gujarat,Mehsani,North Gujarat,Mehsani,0.9999492168426514,1.0,0.999981164932251,0.9999492168426514,True,True
+MEH_S01_R04,mlp_only: fold model that did NOT see this recording,processed_wav,6,North Gujarat,Mehsani,North Gujarat,Mehsani,0.999980092048645,1.0,0.9999973773956299,0.999980092048645,True,True
+MEH_S01_R05,mlp_only: fold model that did NOT see this recording,processed_wav,3,North Gujarat,Mehsani,North Gujarat,Mehsani,0.997661828994751,1.0,0.9938376545906067,0.997661828994751,True,True
+MEH_S01_R06,mlp_only: fold model that did NOT see this recording,processed_wav,5,North Gujarat,Mehsani,North Gujarat,Mehsani,0.9999232292175293,1.0,0.9998871088027954,0.9999232292175293,True,True
+MEH_S01_R07,mlp_only: fold model that did NOT see this recording,processed_wav,1,North Gujarat,Mehsani,North Gujarat,Mehsani,0.9998425245285034,1.0,0.9999023675918579,0.9998425245285034,True,True
+KAT_S01_R01,mlp_only: fold model that did NOT see this recording,processed_wav,1,Saurashtra,Kathiyawadi,Saurashtra,Kathiyawadi,0.9952066540718079,1.0,0.9931173324584961,0.9952066540718079,True,True
+KAT_S01_R02,mlp_only: fold model that did NOT see this recording,processed_wav,7,Saurashtra,Kathiyawadi,Saurashtra,Kathiyawadi,0.9999995231628418,1.0,0.9999994039535522,0.9999995231628418,True,True
+KAT_S01_R03,mlp_only: fold model that did NOT see this recording,processed_wav,4,Saurashtra,Kathiyawadi,Saurashtra,Kathiyawadi,0.9999362230300903,1.0,0.9999667406082153,0.9999362230300903,True,True
+KAT_S01_R04,mlp_only: fold model that did NOT see this recording,processed_wav,6,Saurashtra,Kathiyawadi,Saurashtra,Kathiyawadi,0.9999945163726807,1.0,0.9999979734420776,0.9999945163726807,True,True
+KAT_S01_R05,mlp_only: fold model that did NOT see this recording,processed_wav,3,Saurashtra,Kathiyawadi,Saurashtra,Kathiyawadi,1.0,1.0,1.0,1.0,True,True
+KAT_S01_R06,mlp_only: fold model that did NOT see this recording,processed_wav,2,Saurashtra,Kathiyawadi,Saurashtra,Kathiyawadi,0.9998700618743896,1.0,0.9999840259552002,0.9998700618743896,True,True
+KAT_S01_R07,mlp_only: fold model that did NOT see this recording,processed_wav,5,Saurashtra,Kathiyawadi,Saurashtra,Kathiyawadi,1.0,1.0,0.9999996423721313,1.0,True,True
+SUR_S01_R01,mlp_only: fold model that did NOT see this recording,processed_wav,2,South Gujarat,Surti,South Gujarat,Surti,0.9999827146530151,1.0,0.9999709129333496,0.9999827146530151,True,True
+SUR_S01_R02,mlp_only: fold model that did NOT see this recording,processed_wav,1,South Gujarat,Surti,South Gujarat,Surti,0.999963641166687,1.0,0.9999465942382812,0.999963641166687,True,True
+SUR_S01_R03,mlp_only: fold model that did NOT see this recording,processed_wav,7,South Gujarat,Surti,South Gujarat,Surti,0.999991774559021,1.0,0.999993085861206,0.999991774559021,True,True
+SUR_S01_R04,mlp_only: fold model that did NOT see this recording,processed_wav,4,South Gujarat,Surti,South Gujarat,Surti,0.9999552965164185,1.0,0.9999743700027466,0.9999552965164185,True,True
+SUR_S01_R05,mlp_only: fold model that did NOT see this recording,processed_wav,3,South Gujarat,Surti,South Gujarat,Surti,0.9864252805709839,1.0,0.9905633926391602,0.9864252805709839,True,True
+SUR_S01_R06,mlp_only: fold model that did NOT see this recording,processed_wav,5,South Gujarat,Surti,South Gujarat,Surti,0.9999984502792358,1.0,0.9999988079071045,0.9999984502792358,True,True
+SUR_S01_R07,mlp_only: fold model that did NOT see this recording,processed_wav,6,South Gujarat,Surti,South Gujarat,Surti,0.9972867965698242,1.0,0.9963573813438416,0.9972867965698242,True,True

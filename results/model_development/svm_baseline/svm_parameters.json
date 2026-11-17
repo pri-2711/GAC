@@ -1,0 +1,8 @@
+{
+  "kernel": "rbf",
+  "C": 1.0,
+  "gamma": "scale",
+  "scaler": "StandardScaler fitted on the training recordings of each fold",
+  "n_features": 78,
+  "trained_on": "training recordings only (not the validation recordings)"
+}

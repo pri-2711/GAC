@@ -1,0 +1,37 @@
+{
+  "n": 35,
+  "accent_head": {
+    "accuracy": 0.8571428571428571,
+    "macro_precision": 0.8955555555555555,
+    "macro_recall": 0.8571428571428571,
+    "macro_f1": 0.8518270944741533
+  },
+  "region_head": {
+    "accuracy": 0.8285714285714286,
+    "macro_precision": 0.8828282828282829,
+    "macro_recall": 0.8285714285714285,
+    "macro_f1": 0.8214646464646463
+  },
+  "hierarchical_accent": {
+    "accuracy": 0.8285714285714286,
+    "macro_precision": 0.8828282828282829,
+    "macro_recall": 0.8285714285714285,
+    "macro_f1": 0.8214646464646463
+  },
+  "hierarchical_end_to_end_accuracy": 0.8285714285714286,
+  "fold_accuracy_mean_sd": {
+    "region_accuracy": [
+      0.8285714285714286,
+      0.21380899352993954
+    ],
+    "accent_accuracy": [
+      0.8571428571428571,
+      0.1902379462422684
+    ],
+    "hierarchical_end_to_end_accuracy": [
+      0.8285714285714286,
+      0.21380899352993954
+    ]
+  },
+  "heads_agree_fraction": 0.9428571428571428
+}

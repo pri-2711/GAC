@@ -1,0 +1,9 @@
+
+  [fusion_patience25] fold 1: 132 epochs (best 107), test accent acc 1.00, region acc 1.00  (895s elapsed)
+  [fusion_patience25] fold 2: 109 epochs (best 84), test accent acc 1.00, region acc 1.00  (1649s elapsed)
+  [fusion_patience25] fold 3: 150 epochs (best 148), test accent acc 1.00, region acc 1.00  (2828s elapsed)
+  [fusion_patience25] fold 4: 131 epochs (best 106), test accent acc 1.00, region acc 1.00  (3722s elapsed)
+  [fusion_patience25] fold 5: 145 epochs (best 120), test accent acc 1.00, region acc 1.00  (4705s elapsed)
+  [fusion_patience25] fold 6: 101 epochs (best 76), test accent acc 1.00, region acc 1.00  (47137s elapsed)
+  [fusion_patience25] fold 7: 78 epochs (best 53), test accent acc 1.00, region acc 1.00  (47694s elapsed)
+[done] fusion_patience25: pooled accent acc 1.000, fold-wise 1.000 +/- 0.000 (47696s)

@@ -1,0 +1,45 @@
+{
+  "architecture": "C: MLP only (78 features)",
+  "kind": "mlp",
+  "selected_because": "see report Section 27",
+  "n_fit_recordings": 30,
+  "validation_recordings": [
+    "AHM_S01_R07",
+    "KUT_S01_R07",
+    "MEH_S01_R03",
+    "KAT_S01_R03",
+    "SUR_S01_R02"
+  ],
+  "no_test_set": true,
+  "evaluation_claim": "none: all recordings were seen in fitting or checkpoint selection; the generalisation estimate is the cross-validated result of the same configuration",
+  "training": {
+    "fold": 0,
+    "epochs_run": 82,
+    "best_epoch": 72,
+    "n_params_trainable": 10026,
+    "n_params_total": 10154,
+    "weights_changed_fraction": 1.0,
+    "all_trainable_tensors_updated": true,
+    "checkpoint_matches_restored_weights": true,
+    "final_lr": 4.882812731921149e-07
+  },
+  "bundle_dir": "final_model/bundle",
+  "feature_columns": 78,
+  "train_config": {
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "batch_size": 8,
+    "max_epochs": 100,
+    "repeats_per_epoch": 4,
+    "early_stopping_patience": 10,
+    "reduce_lr_factor": 0.5,
+    "reduce_lr_patience": 4,
+    "lambda_region": 1.0,
+    "lambda_accent": 1.0,
+    "seed": 42,
+    "dropout_cnn": 0.4,
+    "dropout_mlp1": 0.3,
+    "dropout_mlp2": 0.2,
+    "dropout_shared": 0.4
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "columns": [
+    "spectral_centroid_hz_mean",
+    "spectral_centroid_hz_std",
+    "spectral_bandwidth_hz_mean",
+    "spectral_bandwidth_hz_std",
+    "spectral_rolloff_hz_mean",
+    "spectral_rolloff_hz_std",
+    "zero_crossing_rate_mean",
+    "zero_crossing_rate_std",
+    "f0_mean_hz",
+    "f0_std_hz",
+    "f0_median_hz",
+    "f0_p95_minus_p5_hz",
+    "voiced_fraction"
+  ],
+  "separate_from_phase3_schema": true,
+  "not_extracted": {
+    "rms_energy": "recording-level, confounded with the recording setup (Phases 2-4); MFCC 1 already carries level",
+    "formants": "no reliable tracker available without external software"
+  },
+  "f0": "pYIN, 65-400 Hz, statistics over voiced frames"
+}

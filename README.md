@@ -78,10 +78,12 @@ Everything listed here is used in the repository (see `requirements.txt` for the
 | **Numba** | A Librosa dependency (version 0.68 or later is needed to work with NumPy 2.5). |
 | **Pandas** | Metadata, feature and result tables, saved as CSV. |
 | **Matplotlib** | All figures (waveforms, spectrograms, heatmaps, distributions, correlation plots). |
+| **TensorFlow / Keras** (`tensorflow`, `keras`) | Phase 6: builds and trains the neural networks (CNN, MLP and the dual-branch fusion network) from scratch on the CPU. |
+| **scikit-learn** | Phase 6: the SVM baseline and the evaluation metrics (precision, recall, F1, confusion matrices). |
 | **Jupyter** (`ipykernel`, `nbformat`, `nbclient`) | The four phase notebooks, and `scripts/run_notebooks.py`, which runs them headlessly. |
 | **Git** | Version control. |
 
-Phase 5 (PCA) is implemented with NumPy only, so it adds no new dependency. Machine-learning libraries (for example scikit-learn) will be added when Phase 6 begins; they are not used yet.
+Phase 5 (PCA) is implemented with NumPy only. Phase 6 adds TensorFlow/Keras and scikit-learn (pinned in `requirements.txt`); no pretrained models or weights are used anywhere.
 
 ## 6. Project workflow and phases
 
@@ -93,7 +95,7 @@ flowchart LR
     P2 --> P4[Phase 4<br/>Feature analysis]
     P3 --> P4
     P4 --> P5[Phase 5<br/>PCA]
-    P5 --> P6[Phase 6<br/>Model development - planned]
+    P5 --> P6[Phase 6<br/>Model development]
     P6 --> P7[Phase 7<br/>Evaluation - planned]
     P7 --> P8[Phase 8<br/>Prediction pipeline - planned]
     P8 --> P9[Phase 9<br/>Fifth accent Surti - planned]
@@ -106,7 +108,7 @@ flowchart LR
 | **3. MFCC feature extraction** | Extract 13 MFCC, delta and delta-delta coefficients per 10 ms frame (the full frame-level matrices are kept) and summarise each recording by the mean and standard deviation of every coefficient (78 features). | Completed | `results/mfcc/frame_features/*.npz`, `results/mfcc/mfcc_recording_features.csv`, `results/mfcc/mfcc_feature_columns.json` |
 | **4. Feature analysis and comparison** | Examine which features overlap between accents and whether differences are influenced by silence, noise, original format or recording quality. Build speech-only versions of the features. | Completed | `results/feature_analysis/` (summary CSVs, speech-only features, 26 figures) |
 | **5. Dimensionality reduction (PCA)** | Explore the structure of the 78 features with PCA (exploratory only, not a classifier): variance, loadings, accent- and recording-condition patterns, Surti investigation, sensitivity analyses. | Completed | `results/pca/` (scores, variance, loadings, scaler+PCA model, figures), [`reports/pca_report.md`](reports/pca_report.md), `scripts/run_phase5.py` |
-| **6. Model development** | Train and compare classifiers with speaker-aware validation in mind. | **Planned** | – |
+| **6. Model development** | A custom dual-branch CNN–MLP feature-fusion network with hierarchical region/accent heads, trained from scratch, compared with an SVM, an MLP and a CNN under one 7-fold protocol; a final model and an inference pipeline. **Within-speaker, exploratory evaluation only.** | Completed | `results/model_development/`, [`reports/model_development_report.md`](reports/model_development_report.md), `reports/figures/phase6_hierarchical_model_architecture.png`, `scripts/run_phase6.py`, `scripts/predict_accent.py` |
 | **7. Model evaluation** | Evaluate models honestly given the data limitations. | **Planned** | – |
 | **8. Prediction pipeline** | A reusable pipeline that takes a new recording and returns a predicted accent. | **Planned** | – |
 | **9. Fifth accent integration** | Add genuine Surti recordings and update the dataset, features, analysis and the model to five classes. | **Partly completed:** Surti data integrated and Phases 1 to 4 re-run. The five-class model update is planned. | Surti rows in all Phase 1-4 outputs; updated reports |
@@ -139,6 +141,10 @@ flowchart LR
 │   ├── mfcc_features.py          Phase 3: MFCC / delta / delta-delta extraction and validation
 │   ├── feature_analysis.py       Phase 4: overlap, speech-only, format and quality analysis
 │   ├── pca_analysis.py           Phase 5: PCA (NumPy), loadings, condition and sensitivity analyses
+│   ├── model_data.py             Phase 6: Log-Mel spectrograms, extra features, folds, normalisation, augmentation
+│   ├── model_dev.py              Phase 6: Keras models, training, SVM baseline, evaluation, hierarchical inference
+│   ├── model_checks.py           Phase 6: validation checks and inference examples
+│   ├── model_plots.py            Phase 6 figures incl. the architecture diagram
 │   ├── pca_plots.py              Phase 5 figure functions
 │   ├── plot_utils.py             Shared plotting helpers (palette, style, saving)
 │   └── feature_plots.py          Phase 4 figure functions
@@ -146,6 +152,9 @@ flowchart LR
 ├── scripts/
 │   ├── run_phase1.py             Run Phase 1 from the command line
 │   ├── run_phase5.py             Run Phase 5 (PCA) and write results/pca/
+│   ├── run_phase6.py             Run Phase 6 (prepare / train / finalize / evaluate)
+│   ├── predict_accent.py         Predict region and accent of a new recording (final model)
+│   ├── diagnose_cnn_batchnorm.py Phase 6 diagnostic (inference only)
 │   ├── run_notebooks.py          Run the phase notebooks headlessly
 │   └── validate_project.py       Run every project validation in one place
 │
@@ -159,7 +168,8 @@ flowchart LR
 │   ├── audio_analysis/           Phase 2 figures and CSV tables
 │   ├── mfcc/                     Phase 3: frame_features/ (NPZ), CSV tables, figures/
 │   ├── feature_analysis/         Phase 4: CSV tables, figures/
-│   └── pca/                      Phase 5: scores, variance, loadings, model, tables, figures/
+│   ├── pca/                      Phase 5: scores, variance, loadings, model, tables, figures/
+│   └── model_development/        Phase 6: spectrograms, per-experiment folders, final_model/, hierarchical_inference/, evaluation/
 │
 └── reports/                     Human-readable research reports
     ├── README.md                 Index of the reports
@@ -167,6 +177,8 @@ flowchart LR
     ├── mfcc_extraction_report.md
     ├── feature_analysis_report.md
     ├── pca_report.md
+    ├── model_development_report.md
+    ├── figures/                  Phase 6 architecture diagram
     └── project_cleanup_audit.md  Code audit and cleanup record
 ```
 
@@ -204,6 +216,12 @@ Notes:
 - PC1 to PC4 explain 33.5%, 12.0%, 10.2% and 8.7% of the variance (64.4% together); 9, 15 and 19 components are needed for 80%, 90% and 95%. PC1 to PC4 are above chance level (shuffled-data baseline), PC5 onwards is not.
 - Each of PC1 to PC4 is almost entirely one speaker/accent group (η² with the accent label 0.85 to 0.94), so the five groups form largely separate clouds. With one speaker per accent this is expected from voice and recording-session differences and **is not evidence of accent recognition**.
 - PC1 is dominated by variability (standard-deviation) features; removing MFCC 1 and 2 changes the structure very little. Surti forms its own cloud but does not drive PC1; its noisier session is a likely contributor, not an accent finding.
+
+**Phase 6 – model development (within-speaker, exploratory; see [`reports/model_development_report.md`](reports/model_development_report.md))**
+- A custom dual-branch CNN–MLP fusion network (Log-Mel CNN 128-d + feature MLP 32-d → concatenation 160-d → shared Dense(64) → region and accent softmax heads; 127,626 trainable parameters) was implemented and trained from scratch. Diagram: `reports/figures/phase6_hierarchical_model_architecture.png`.
+- Same 7-fold protocol (each fold holds out one recording per accent): SVM 1.000, MLP-only 1.000, fusion network (as specified) 0.857, CNN-only 0.429 pooled accuracy. Post-hoc variants with longer early-stopping patience: fusion 1.000, CNN-only 0.486; fusion without augmentation 0.771.
+- The CNN's weak results are largely a training artefact: checkpoints saved at epochs 3 to 9 carry unconverged BatchNorm statistics (stored variance 4–19 times the true value), while long-trained folds are all correct. The architecture is not shown to be unsuitable.
+- **Final model selected: the MLP on the 78 features with the hierarchical heads** (10,026 trainable parameters), because accuracy cannot separate the working models and nothing shows that the CNN branch helps. The fusion design remains documented for re-testing with more data. These scores are within-speaker and **do not show accent generalisation**; with one accent per region the two heads are equivalent, so multi-accent hierarchical discrimination is not demonstrated.
 
 ## 9. Scientific limitations
 
@@ -257,6 +275,14 @@ python scripts/run_phase1.py                # add --force to reconvert everythin
 python scripts/run_phase5.py                # writes results/pca/ and runs its 40 validation checks
 ```
 
+**Run Phase 6 (model development)** (needs Phases 1–4; resumable; the full training takes many CPU-hours because the CNN-based runs are slow):
+
+```bash
+python scripts/run_phase6.py --stage evaluate            # consolidate existing results, figures and validation (no training)
+python scripts/run_phase6.py                              # prepare + train all experiments + final model + evaluate
+python scripts/predict_accent.py recording.m4a            # region/accent prediction for a new recording (final model)
+```
+
 **Run the notebooks** (each phase uses the outputs of the earlier ones):
 
 ```bash
@@ -277,6 +303,7 @@ Or open `notebooks/01_audio_standardization.ipynb` to `notebooks/04_feature_anal
 | Recording-level feature table and feature-column list | `results/mfcc/mfcc_recording_features.csv`, `results/mfcc/mfcc_feature_columns.json` |
 | Feature-analysis tables and figures | `results/feature_analysis/` |
 | PCA scores, loadings, saved scaler+PCA model, figures | `results/pca/` |
+| Phase 6 experiments, checkpoints, final model, comparison tables | `results/model_development/` |
 | Research reports | `reports/` |
 
 Loading the features for your own experiments: read `results/mfcc/mfcc_feature_columns.json`. Use only the columns listed under `acoustic_feature_columns` as model inputs; never use recording IDs, speaker IDs, accent labels or quality flags as inputs.
@@ -290,6 +317,7 @@ Loading the features for your own experiments: read `results/mfcc/mfcc_feature_c
 | [`reports/mfcc_extraction_report.md`](reports/mfcc_extraction_report.md) | Phase 3: MFCC feature extraction |
 | [`reports/feature_analysis_report.md`](reports/feature_analysis_report.md) | Phase 4: feature analysis and comparison |
 | [`reports/pca_report.md`](reports/pca_report.md) | Phase 5: PCA and dimensionality reduction |
+| [`reports/model_development_report.md`](reports/model_development_report.md) | Phase 6: dual-branch CNN–MLP hierarchical model, experiments and model decision |
 | [`reports/project_cleanup_audit.md`](reports/project_cleanup_audit.md) | Code audit and cleanup record after Phase 4 |
 
 The reports are written in simple language, with embedded figures and tables, and can be read without opening the notebooks.
@@ -297,7 +325,7 @@ The reports are written in simple language, with embedded figures and tables, an
 ## 13. Future work
 
 - ~~Phase 5 – Dimensionality reduction (PCA)~~ **completed** (see the findings below and [`reports/pca_report.md`](reports/pca_report.md)).
-- **Phase 6 – Model development.** Train and compare classifiers using only the acoustic columns listed in `mfcc_feature_columns.json`. Keep the candidate features from Phase 4 as a starting point, not a final feature set.
+- ~~Phase 6 – Model development~~ **completed** (within-speaker, exploratory; see [`reports/model_development_report.md`](reports/model_development_report.md)). Open points: speaker-independent evaluation, multi-accent regions, repeated seeds, a BatchNorm fix for the CNN-based runs.
 - **Phase 7 – Model evaluation.** Evaluate honestly. With one speaker per accent, scores on held-out recordings of the *same* speakers do not show accent recognition.
 - **Phase 8 – Prediction pipeline.** A reusable pipeline: new recording → standardised WAV → features → predicted accent.
 - **Phase 9 – Fifth accent (Surti).** **Partly completed.** The seven Surti recordings were added, and Phases 1 to 4 were re-run with the same extraction parameters and feature schema, so the metadata, quality metrics, features and analyses are consistent across all five accents. What remains is the five-class model update, once models exist. The same procedure works for further recordings or accents:

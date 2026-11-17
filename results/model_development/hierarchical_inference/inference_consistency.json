@@ -1,0 +1,4 @@
+{
+  "max_abs_probability_difference": 2.864227299781419e-08,
+  "meaning": "reusable predictor (audio file -> features -> saved normalisation -> model) vs the batch evaluation predictions"
+}

@@ -42,7 +42,8 @@ def record(name: str, ok, detail: str = "") -> None:
 # --------------------------------------------------------------------------- #
 section("1. Imports")
 MODULES = ["config", "common", "plot_utils", "audio_utils", "audio_analysis",
-           "mfcc_features", "feature_analysis", "feature_plots", "pca_analysis", "pca_plots"]
+           "mfcc_features", "feature_analysis", "feature_plots", "pca_analysis", "pca_plots",
+           "model_data", "model_dev", "model_plots", "model_checks"]
 for m in MODULES:
     try:
         importlib.import_module(m)
@@ -156,6 +157,33 @@ if rep5.is_file():
     figs_used = set(re.findall(r"\]\(\.\./results/pca/figures/([^)]+)\)", txt5))
     figs_all = {q.name for q in (PCA / "figures").glob("*.png")}
     record("pca_report.md embeds every Phase 5 figure", figs_used == figs_all, f"unreferenced: {sorted(figs_all - figs_used)}; missing: {sorted(figs_used - figs_all)}")
+
+# --------------------------------------------------------------------------- #
+section("5c. Phase 6 - hierarchical dual-branch model (read-only; re-run scripts/run_phase6.py to regenerate)")
+import model_checks as mchk
+
+M6 = cfg.RESULTS_DIR / "model_development"
+p6_dirs = ["spectrograms", "additional_features", "cnn_only", "mlp_only", "fusion_model", "svm_baseline", "hierarchical_inference", "evaluation"]
+record("Phase 6 result folders present", all((M6 / d).is_dir() for d in p6_dirs), f"missing: {[d for d in p6_dirs if not (M6 / d).is_dir()]}")
+p6_files = ["evaluation/experiment_comparison.csv", "evaluation/validation_summary.txt", "evaluation/cross_validation_folds.csv",
+            "hierarchical_inference/prediction_examples.csv", "spectrograms/log_mel_spectrograms.npz", "additional_features/additional_acoustic_features.csv",
+            "svm_baseline/predictions.csv", "cnn_only/predictions.csv", "mlp_only/predictions.csv", "fusion_model/predictions.csv", "fusion_model/fold_1/model.keras"]
+record("Phase 6 key output files present", all((M6 / f).is_file() for f in p6_files), f"missing: {[f for f in p6_files if not (M6 / f).is_file()]}")
+if (M6 / "evaluation" / "validation_summary.txt").is_file():
+    st = (M6 / "evaluation" / "validation_summary.txt").read_text(encoding="utf-8").strip().splitlines()[-1]
+    record("Phase 6 validation_summary.txt: all checks passed", st.split()[0].split("/")[0] == st.split()[0].split("/")[1], st)
+    for name, ok, detail in mchk.phase6_checks(deep=False):
+        record(f"[phase6] {name}", ok, detail if not ok else "")
+record("Phase 6 architecture diagram exists", (ROOT / "reports" / "figures" / "phase6_hierarchical_model_architecture.png").is_file())
+rep6 = ROOT / "reports" / "model_development_report.md"
+record("reports/model_development_report.md exists", rep6.is_file())
+if rep6.is_file():
+    txt6 = rep6.read_text(encoding="utf-8")
+    heads6 = re.findall(r"^##\s+(\d+)\.", txt6, re.M)
+    record("model_development_report.md contains the 30 required numbered sections", [int(h) for h in heads6] == list(range(1, 31)), f"found {heads6}")
+    record("report embeds the architecture diagram by relative path", "](figures/phase6_hierarchical_model_architecture.png)" in txt6)
+    used6 = set(re.findall(r"\]\(\.\./results/model_development/([^)]+\.png)\)", txt6))
+    record("every Phase 6 figure referenced in the report exists", all((M6 / u).is_file() for u in used6), f"{len(used6)} figures referenced")
 
 # --------------------------------------------------------------------------- #
 section("6. Notebooks (stored outputs)")
