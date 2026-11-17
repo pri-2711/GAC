@@ -28,7 +28,7 @@ import streamlit as st  # noqa: E402
 import frontend_utils as fu  # noqa: E402
 import plot_utils as pu  # noqa: E402
 
-st.set_page_config(page_title="Gujarati Accent Classifier", page_icon="🎙️", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Gujarati Accent Classifier", page_icon=":material/mic:", layout="wide", initial_sidebar_state="expanded")
 
 NAVY, TEAL, SAND, INK, MUTED = "#14213D", "#0F766E", "#FFF7ED", "#1F2937", "#6B7280"
 MIME = {"WAV": "audio/wav", "MP3": "audio/mpeg", "M4A": "audio/mp4", "OGG": "audio/ogg"}
@@ -62,6 +62,12 @@ h1, h2, h3 {{ letter-spacing: -0.01em; color: {NAVY}; }}
 .step .n {{ min-width: 1.9rem; height: 1.9rem; border-radius: 50%; background: {TEAL}; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .9rem; }}
 .footer {{ color: {MUTED}; font-size: .82rem; text-align: center; margin-top: 2.4rem; border-top: 1px solid #E5E7EB; padding-top: 1rem; }}
 section[data-testid="stSidebar"] {{ background: #F8FAFC; border-right: 1px solid #E5E7EB; }}
+/* sidebar tab-style navigation: inactive tab = plain row, active tab = tinted row with a teal left bar */
+section[data-testid="stSidebar"] div.stButton > button {{ justify-content: flex-start; text-align: left; background: transparent; color: {INK}; border: none; border-left: 4px solid transparent; border-radius: 10px; padding: .6rem .9rem; font-weight: 500; font-size: 1rem; box-shadow: none; }}
+section[data-testid="stSidebar"] div.stButton > button > div {{ justify-content: flex-start; }}
+section[data-testid="stSidebar"] div.stButton > button:hover {{ background: #F0FDFA; color: {TEAL}; border-left-color: #99F6E4; }}
+section[data-testid="stSidebar"] div.stButton > button[kind="primary"] {{ background: #F0FDFA; color: {TEAL}; border-left: 4px solid {TEAL}; font-weight: 700; padding: .6rem .9rem; font-size: 1rem; }}
+section[data-testid="stSidebar"] div.stButton > button[kind="primary"]:hover {{ background: #CCFBF1; color: #115E59; }}
 div[data-testid="stFileUploader"] section {{ border: 2px dashed {TEAL}; border-radius: 16px; background: #F0FDFA; }}
 div.stButton > button[kind="primary"] {{ background: {TEAL}; border: none; border-radius: 12px; padding: .7rem 1.6rem; font-weight: 700; font-size: 1.05rem; }}
 div.stButton > button[kind="primary"]:hover {{ background: #115E59; }}
@@ -96,14 +102,25 @@ COLORS = pu.accent_colors(facts["accents"])
 DATA = fu.dataset_facts()
 
 # --------------------------------------------------------------------------- sidebar
+PAGES = {"Home": ":material/home:", "Classify audio": ":material/headphones:", "About the model": ":material/psychology:", "Dataset & limitations": ":material/bar_chart:"}
+st.session_state.setdefault("page", "Home")
+
+
+def _go(name: str) -> None:
+    st.session_state["page"] = name
+
+
 with st.sidebar:
-    st.markdown("### 🎙️ Gujarati Accent Classifier")
-    page = st.radio("Navigate", ["🏠 Home", "🎧 Classify audio", "🧠 About the model", "📊 Dataset & limitations"], label_visibility="collapsed")
+    st.markdown("### :material/mic: Gujarati Accent Classifier")
+    for _name, _icon in PAGES.items():
+        st.button(_name, key=f"nav_{_name}", icon=_icon, use_container_width=True,
+                  type="primary" if st.session_state["page"] == _name else "secondary", on_click=_go, args=(_name,))
+    page = st.session_state["page"]
     st.markdown("---")
     st.caption("**Model**")
     st.caption(f"Final MLP · {facts['n_features']} acoustic features · {facts['n_trainable']:,} trainable parameters · trained from scratch")
     st.caption("**Supported files**: " + ", ".join(e.upper().lstrip(".") for e in fu.SUPPORTED_EXTENSIONS))
-    html(f'<div class="warn" style="font-size:.82rem;padding:.6rem .8rem;">⚠ Experimental prototype. Not validated on unseen speakers.</div>')
+    html(f'<div class="warn" style="font-size:.82rem;padding:.6rem .8rem;">△ Experimental prototype. Not validated on unseen speakers.</div>')
 
 
 def hero(title: str, subtitle: str, badges: list[str]) -> None:
@@ -123,7 +140,7 @@ def page_home() -> None:
     st.markdown("### Supported accents and their regions")
     cols = st.columns(len(facts["accents"]))
     for col, a in zip(cols, facts["accents"]):
-        col.markdown(f'<div class="accent-card" style="--c:{COLORS[a]}"><div class="name">{a}</div><div class="region">📍 {facts["accent_to_region"][a]}</div></div>', unsafe_allow_html=True)
+        col.markdown(f'<div class="accent-card" style="--c:{COLORS[a]}"><div class="name">{a}</div><div class="region">⌖ {facts["accent_to_region"][a]}</div></div>', unsafe_allow_html=True)
     st.markdown("")
     left, right = st.columns([3, 2])
     with left:
@@ -137,7 +154,7 @@ def page_home() -> None:
         is represented by <b>one speaker</b>, so the model cannot tell an accent from an individual voice. Treat results as a demonstration of the
         pipeline, not as an accent test.</p></div>""")
     html(f'<div class="warn">{WARNING_TEXT}</div>')
-    st.info("Open **🎧 Classify audio** in the sidebar to try it.")
+    st.info("Open the :material/headphones: **Classify audio** tab in the sidebar to try it.")
 
 
 def waveform_figure(y: np.ndarray, sr: int):
@@ -174,7 +191,7 @@ def prob_chart(names: list[str], probs: list[float], regions: dict[str, str] | N
 def show_result(res: dict) -> None:
     c = COLORS.get(res["accent"], TEAL)
     html(f"""<div class="result" style="--c:{c}"><div class="label">Predicted accent</div><div class="accent">{res['accent']}</div>
-    <div class="region">📍 {res['region']}</div>
+    <div class="region">⌖ {res['region']}</div>
     <div class="score">Model output score for this accent: <b>{res['accent_head_probability']:.1%}</b> · for this region: <b>{res['region_confidence']:.1%}</b>
     (softmax scores of a small network – <u>not</u> calibrated confidence)</div></div>""")
     html(f'<div class="warn">{WARNING_TEXT}</div>')
@@ -242,8 +259,8 @@ def page_classify() -> None:
     sr_txt = f"{prep.original_sample_rate / 1000:g} kHz" if prep.original_sample_rate else "unknown rate"
     ch = prep.original_channels
     ch_txt = {1: "mono", 2: "stereo"}.get(ch, f"{ch} channels") if ch is not None else ""
-    html(f'<span class="chip">📄 {prep.name}</span><span class="chip">{prep.original_format} · {sr_txt} · {ch_txt}</span>'
-         f'<span class="chip">⏱ {prep.duration_s:.1f} s</span><span class="chip">→ standardised to 16 kHz mono</span>'
+    html(f'<span class="chip">▢ {prep.name}</span><span class="chip">{prep.original_format} · {sr_txt} · {ch_txt}</span>'
+         f'<span class="chip">◷ {prep.duration_s:.1f} s</span><span class="chip">→ standardised to 16 kHz mono</span>'
          f'<span class="chip">level {prep.rms_dbfs:.0f} dBFS RMS</span>')
     for w in prep.warnings:
         st.warning(w)
@@ -251,7 +268,7 @@ def page_classify() -> None:
 
     st.markdown("#### 2 · Classify")
     store = st.session_state.setdefault("results", {})
-    if st.button("🔍  Classify accent", type="primary"):
+    if st.button("Classify accent", icon=":material/search:", type="primary"):
         with st.spinner("Analysing the recording with the trained model…"):
             try:
                 store[key] = fu.classify(prep, predictor)
@@ -318,6 +335,9 @@ def page_dataset() -> None:
     <li>Near-perfect scores in the project’s cross-validation are therefore <b>expected</b> and are <b>not</b> evidence that the accents will be recognised in new speakers.</li>
     <li>A new speaker will always be assigned to the <b>most similar of the five known voices</b>, even if their accent is none of these five.</li>
     <li>Each region contains one accent, so distinguishing several accents <b>within</b> a region has <b>not</b> been demonstrated.</li>
+    <li><b>Speaker gender and voice characteristics:</b> differences in speaker gender and gender-associated vocal characteristics, such as pitch and voice quality, could potentially
+    influence the acoustic features and lead to biased accent predictions. <b>Gender-independent performance has not been established</b>, because the dataset does not have enough speaker
+    diversity (one speaker per accent). This is a potential risk that has not been tested; it is <b>not</b> an experimentally demonstrated bias.</li>
     <li>Recording conditions differ between the five groups (format, sample rate, noise level); the model may use them as shortcuts.</li></ul></div>""")
     html("""<div class="card"><h3>Future scope</h3><ul>
     <li>More speakers per accent and more recordings per speaker; same-device, quiet recordings.</li>
@@ -325,5 +345,5 @@ def page_dataset() -> None:
     <li>Speaker-independent evaluation (train and test on different speakers) and a more generalisable classifier.</li></ul></div>""")
 
 
-{"🏠 Home": page_home, "🎧 Classify audio": page_classify, "🧠 About the model": page_model, "📊 Dataset & limitations": page_dataset}[page]()
+{"Home": page_home, "Classify audio": page_classify, "About the model": page_model, "Dataset & limitations": page_dataset}[page]()
 st.markdown('<div class="footer">Gujarati Accent Classifier · research prototype (Phases 1–7) · experimental, not validated on unseen speakers</div>', unsafe_allow_html=True)

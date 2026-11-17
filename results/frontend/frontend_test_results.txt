@@ -23,9 +23,19 @@ Phase 7 frontend tests (executed by scripts/test_frontend.py)
 [PASS] Over-long audio (190 s) is rejected -> message: The recording is too long (190 s). Please upload at most 180 seconds.
 [PASS] Near-silent noise is accepted with a 'very quiet' warning (not a crash) -> warnings: ['The recording is very quiet (RMS -80 dBFS) and may be mostly silence or noise.']
 [PASS] Short but valid audio (3 s) is accepted with a warning
-[PASS] App page renders without exception: 🏠 Home
-[PASS] App page renders without exception: 🎧 Classify audio
-[PASS] App page renders without exception: 🧠 About the model
-[PASS] App page renders without exception: 📊 Dataset & limitations
+[PASS] App page renders without exception: Home
+[PASS] Clicking the 'Home' tab shows that page -> marker: Supported accents and their regions
+[PASS] 'Home' tab is the only active (primary) tab
+[PASS] App page renders without exception: Classify audio
+[PASS] Clicking the 'Classify audio' tab shows that page -> marker: Classify a recording
+[PASS] 'Classify audio' tab is the only active (primary) tab
+[PASS] App page renders without exception: About the model
+[PASS] Clicking the 'About the model' tab shows that page -> marker: The 78 numerical acoustic features
+[PASS] 'About the model' tab is the only active (primary) tab
+[PASS] App page renders without exception: Dataset & limitations
+[PASS] Clicking the 'Dataset & limitations' tab shows that page -> marker: The key limitation: one speaker per accent
+[PASS] 'Dataset & limitations' tab is the only active (primary) tab
+[PASS] Sidebar navigation uses tab buttons and has no radio widget
+[PASS] Gender-related limitation is shown on the Dataset & limitations page, without claiming proven bias
 
-27/27 tests passed
+37/37 tests passed

@@ -289,7 +289,7 @@ pip install -r requirements.txt     # once (includes Streamlit, TensorFlow and F
 streamlit run app.py                # then open http://localhost:8501
 ```
 
-*Using it:* open **🎧 Classify audio**, drag in or browse for a recording (WAV, MP3, M4A or OGG, 1 to 180 s, ideally 8 to 18 s of clear speech), play it back, check the waveform, press **Classify accent**, and read the predicted accent, its region and the output scores of the region and accent heads. Other pages: **Home** (the five accents and regions), **About the model** (the 78 features, the MLP and its two heads) and **Dataset & limitations**.
+*Using it:* open the **Classify audio** tab in the sidebar, drag in or browse for a recording (WAV, MP3, M4A or OGG, 1 to 180 s, ideally 8 to 18 s of clear speech), play it back, check the waveform, press **Classify accent**, and read the predicted accent, its region and the output scores of the region and accent heads. Other pages: **Home** (the five accents and regions), **About the model** (the 78 features, the MLP and its two heads) and **Dataset & limitations**.
 
 *Features:* upload validation (file type, empty file, undecodable file, too short, silent, too long, with clear messages), playback, waveform, loading indicator, region and accent prediction by the real final MLP, output-score charts, hierarchical-decision explanation, and a permanent warning that the model is experimental. Uploaded audio is standardised (FFmpeg, 16 kHz mono) and classified by the same code as `scripts/predict_accent.py`; nothing is re-implemented in the app, and the model is never retrained or changed.
 

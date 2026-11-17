@@ -164,14 +164,25 @@ def main() -> int:
     p3 = fu.prepare_upload("three_s.wav", three.read_bytes(), predictor)
     check("Short but valid audio (3 s) is accepted with a warning", any("Short recording" in w for w in p3.warnings) and fu.classify(p3, predictor)["accent"] in facts["accents"])
 
-    # 7. every page renders (Streamlit AppTest, no upload interaction possible in AppTest)
+    # 7. every page renders; sidebar uses tab-style buttons (no radio); tabs switch pages (Streamlit AppTest; no upload interaction possible)
     from streamlit.testing.v1 import AppTest
-    for page in ("🏠 Home", "🎧 Classify audio", "🧠 About the model", "📊 Dataset & limitations"):
+    pages = {"Home": "Supported accents and their regions", "Classify audio": "Classify a recording", "About the model": "The 78 numerical acoustic features",
+             "Dataset & limitations": "The key limitation: one speaker per accent"}
+
+    def texts(at):
+        return " ".join(str(m.value) for m in at.markdown)
+
+    for page, marker in pages.items():
         at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=120)
         at.run()
-        if page != "🏠 Home":
-            at.sidebar.radio[0].set_value(page).run()
+        if page != "Home":
+            at.sidebar.button(key=f"nav_{page}").click().run()
         check(f"App page renders without exception: {page}", not at.exception, "; ".join(str(e.value)[:120] for e in at.exception))
+        check(f"Clicking the '{page}' tab shows that page", marker in texts(at), f"marker: {marker}")
+        check(f"'{page}' tab is the only active (primary) tab", [b.key for b in at.sidebar.button if b.proto.type == "primary"] == [f"nav_{page}"])
+    check("Sidebar navigation uses tab buttons and has no radio widget", len(at.sidebar.radio) == 0 and len(at.sidebar.button) == len(pages))
+    check("Gender-related limitation is shown on the Dataset & limitations page, without claiming proven bias",
+          "Gender-independent performance has not been established" in texts(at) and "not</b> an experimentally demonstrated bias" in texts(at))
 
     n_ok = sum(ok for _, ok, _ in results)
     out_dir = ROOT / "results" / "frontend"
