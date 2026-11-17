@@ -218,6 +218,42 @@ if rep7.is_file():
 record("root README documents the launch command", "streamlit run app.py" in (ROOT / "README.md").read_text(encoding="utf-8"))
 
 # --------------------------------------------------------------------------- #
+section("5e. Research paper - structure, figures, tables and citations")
+paper = ROOT / "reports" / "research_paper.md"
+record("reports/research_paper.md exists", paper.is_file())
+if paper.is_file():
+    pt = paper.read_text(encoding="utf-8")
+    heads = re.findall(r"^## (.+)$", pt, re.M)
+    want = ["ABSTRACT", "1. INTRODUCTION", "2. LITERATURE REVIEW", "3. METHODOLOGY", "4. RESULTS AND DISCUSSION", "5. CONCLUSION", "REFERENCES"]
+    record("paper has the required main sections in order", [h for h in heads if h in want] == want, f"found {heads}")
+    subs = re.findall(r"^### (\d+\.\d+) ", pt, re.M)
+    need = [f"3.{i}" for i in range(1, 11)] + [f"4.{i}" for i in range(1, 10)] + ["5.1", "5.2", "5.3"]
+    record("paper has the required subsections (3.1-3.10, 4.1-4.9, 5.1-5.3 incl. Limitations and Future scope)", all(n in subs for n in need), f"missing: {[n for n in need if n not in subs]}")
+    record("paper has no unresolved template markers", not re.search(r"@@|%%|@fig:|@tbl:", pt))
+    img = re.findall(r"^!\[Figure (\d+)\]\(([^)]+)\)", pt, re.M)
+    nums = [int(n) for n, _ in img]
+    record("paper figures are numbered 1..N without gaps", nums == list(range(1, len(nums) + 1)), f"{len(nums)} figures")
+    record("every figure image in the paper exists", all((paper.parent / p).resolve().is_file() for _, p in img), f"missing: {[p for _, p in img if not (paper.parent / p).resolve().is_file()]}")
+    caps = set(re.findall(r"^\*Figure (\d+)\.\*", pt, re.M))
+    record("every figure has a caption", caps == {n for n, _ in img})
+    prose = "\n".join(l for l in pt.splitlines() if not l.startswith(("![Figure", "*Figure", "*Table")))
+    unref = [n for n in nums if not re.search(rf"\bFigure {n}\b", prose)]
+    record("every figure is referred to in the text", not unref, f"unreferenced: {unref}")
+    tn = [int(n) for n in re.findall(r"^\*Table (\d+)\.\*", pt, re.M)]
+    record("paper tables are numbered 1..N and referred to in the text", tn == list(range(1, len(tn) + 1)) and all(re.search(rf"\bTable {n}\b", prose) for n in tn), f"{len(tn)} tables")
+    body, _, refs_text = pt.partition("## REFERENCES")
+    cited = {int(n) for n in re.findall(r"\[(\d+)\]", body)}
+    listed = [int(n) for n in re.findall(r"^\[(\d+)\] ", refs_text, re.M)]
+    record("every in-text citation has a reference entry, and every entry is cited", cited == set(listed) and listed == list(range(1, len(listed) + 1)),
+           f"cited-not-listed: {sorted(cited - set(listed))}; listed-not-cited: {sorted(set(listed) - cited)}")
+    low = pt.lower()
+    record("paper states the within-speaker / unseen-speaker limitation", "within-speaker" in low and "unseen speakers" in low)
+    record("paper states the gender-related limitation without claiming proven bias", "gender-independent performance has not been established" in low and "do not claim that any bias was observed" in low)
+    record("paper says no frontend screenshot exists", "did not include a screenshot" in low)
+    record("paper figure numbers quoted in the audit match", (ROOT / "reports" / "research_paper_audit.md").is_file())
+record("root README links the research paper", "reports/research_paper.md" in (ROOT / "README.md").read_text(encoding="utf-8"))
+
+# --------------------------------------------------------------------------- #
 section("6. Notebooks (stored outputs)")
 for nb in sorted((ROOT / "notebooks").glob("*.ipynb")):
     j = json.loads(nb.read_text(encoding="utf-8"))

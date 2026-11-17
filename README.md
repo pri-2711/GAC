@@ -159,6 +159,8 @@ flowchart LR
 │   ├── run_phase6.py             Run Phase 6 (prepare / train / finalize / evaluate)
 │   ├── predict_accent.py         Predict region and accent of a new recording (final model)
 │   ├── test_frontend.py          Phase 7 frontend tests (real model, real files)
+│   ├── build_paper.py            Build reports/research_paper.md from scripts/paper_template.md and the saved results
+│   ├── make_paper_figures.py     Draw the paper's schematic diagrams (reports/figures/paper_fig_*.png)
 │   ├── diagnose_cnn_batchnorm.py Phase 6 diagnostic (inference only)
 │   ├── run_notebooks.py          Run the phase notebooks headlessly
 │   └── validate_project.py       Run every project validation in one place
@@ -185,6 +187,8 @@ flowchart LR
     ├── pca_report.md
     ├── model_development_report.md
     ├── frontend_implementation_report.md
+    ├── research_paper.md         The research paper (built by scripts/build_paper.py)
+    ├── research_paper_audit.md   Reference and number audit for the paper
     ├── figures/                  Phase 6 architecture diagram
     └── project_cleanup_audit.md  Code audit and cleanup record
 ```
@@ -339,6 +343,8 @@ Loading the features for your own experiments: read `results/mfcc/mfcc_feature_c
 | [`reports/pca_report.md`](reports/pca_report.md) | Phase 5: PCA and dimensionality reduction |
 | [`reports/model_development_report.md`](reports/model_development_report.md) | Phase 6: dual-branch CNN–MLP hierarchical model, experiments and model decision |
 | [`reports/frontend_implementation_report.md`](reports/frontend_implementation_report.md) | Phase 7: Streamlit web application, integration, tests and limitations |
+| [`reports/research_paper.md`](reports/research_paper.md) | **Research paper:** the whole project as one connected paper (abstract, introduction, literature review, methodology, results and discussion, conclusion, references) |
+| [`reports/research_paper_audit.md`](reports/research_paper_audit.md) | How the paper's references and numbers were checked, and what could not be verified |
 | [`reports/project_cleanup_audit.md`](reports/project_cleanup_audit.md) | Code audit and cleanup record after Phase 4 |
 
 The reports are written in simple language, with embedded figures and tables, and can be read without opening the notebooks.

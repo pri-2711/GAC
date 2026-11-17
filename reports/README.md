@@ -10,6 +10,8 @@ Beginner-friendly visual analysis reports for each phase of the Gujarati Accent 
 | 5 – Dimensionality reduction (PCA) | [pca_report.md](pca_report.md) | `scripts/run_phase5.py`, `results/pca/` |
 | 6 – Model development (dual-branch CNN–MLP, experiments, final model) | [model_development_report.md](model_development_report.md) | `scripts/run_phase6.py`, `results/model_development/`, `figures/phase6_hierarchical_model_architecture.png` |
 | 7 – Web application (Streamlit frontend) | [frontend_implementation_report.md](frontend_implementation_report.md) | `app.py`, `src/frontend_utils.py`, `scripts/test_frontend.py`, `results/frontend/` |
+| Research paper – the complete write-up of the project (abstract, introduction, literature review, methodology, results, conclusion) | [research_paper.md](research_paper.md) | all phases; built by `scripts/build_paper.py` |
+| Research paper – source and reference audit (how the references and numbers were checked; what could not be verified) | [research_paper_audit.md](research_paper_audit.md) | `reports/research_paper.md` |
 | Maintenance - code audit and cleanup after Phase 4 | [project_cleanup_audit.md](project_cleanup_audit.md) | `src/`, `scripts/`, `README.md` |
 
 **Surti update.** The Phase 2, 3 and 4 reports were updated after genuine Surti recordings were added: they now cover **five accents and 35 recordings**. The original four-accent findings are kept; anything new is marked **[NEW – Surti]** and anything that changed is marked **[CHANGED]**, and each report starts with a "What Changed After Adding Surti" section. The last four-accent versions are in the git history (commit `644befb`).
